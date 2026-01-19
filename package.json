@@ -10,6 +10,8 @@
     "restart": "npm run stop && npm run start",
     "logs": "cd dify-local/docker && docker compose logs -f",
     "dify:sync": "tsx scripts/dify-cli.ts sync",
+    "dify:export": "tsx scripts/dify-cli.ts export",
+    "dify:logout": "tsx scripts/dify-cli.ts logout",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "INTEGRATION_TEST=true vitest run"
@@ -22,6 +24,7 @@
     "vitest": "^4.0.17"
   },
   "dependencies": {
+    "playwright": "^1.57.0",
     "yaml": "^2.8.2"
   }
 }

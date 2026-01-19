@@ -46,4 +46,22 @@ npm test
 
 # 統合テスト実行
 npm run test:integration
+
+# DifyアプリのDSLをエクスポート（git管理用）
+npm run dify:export
+
+# セッションをクリア（再ログインしたい時）
+npm run dify:logout
+```
+
+## Dify設定のgit管理
+
+DifyアプリのDSL（ワークフロー定義）は `dify-settings/dsl/` に保存されます。
+プロンプトチューニング後は `npm run dify:export` を実行してDSLをエクスポートし、コミットしてください。
+
+```bash
+# プロンプト調整後
+npm run dify:export
+git add dify-settings/
+git commit -m "Update: プロンプト調整"
 ```
