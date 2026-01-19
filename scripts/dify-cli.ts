@@ -1,6 +1,9 @@
 #!/usr/bin/env tsx
 
+import "dotenv/config";
 import { runSync } from "./src/usecase/sync.js";
+import { exportAllDsl } from "./src/usecase/export-dsl.js";
+import { clearAuthState } from "./src/auth/playwright-auth.js";
 
 interface CliConfig {
   apiUrl: string;
@@ -24,6 +27,34 @@ function getEnvConfig(): CliConfig {
   return { apiUrl, apiKey };
 }
 
+async function exportCommand(): Promise<void> {
+  const baseUrl = process.env.DIFY_CONSOLE_URL || "http://localhost";
+  const email = process.env.DIFY_EMAIL;
+  const password = process.env.DIFY_PASSWORD;
+  const outputDir = "dify-settings/dsl";
+
+  console.log("Exporting DSLs from Dify...\n");
+
+  const results = await exportAllDsl({
+    baseUrl,
+    outputDir,
+    email,
+    password,
+    includeSecret: false,
+    headless: true,
+  });
+
+  const success = results.filter((r) => r.success).length;
+  const failed = results.filter((r) => !r.success).length;
+
+  console.log(`\nExport complete: ${success} succeeded, ${failed} failed`);
+  console.log(`DSLs saved to: ${outputDir}/`);
+
+  if (failed > 0) {
+    process.exit(1);
+  }
+}
+
 async function syncCommand(): Promise<void> {
   const config = getEnvConfig();
 
@@ -32,7 +63,7 @@ async function syncCommand(): Promise<void> {
   const results = await runSync({
     baseUrl: config.apiUrl,
     apiKey: config.apiKey,
-    configPath: "dify/sync.yaml",
+    configPath: "dify-settings/sync.yaml",
   });
 
   let totalCreated = 0;
@@ -73,8 +104,13 @@ async function main(): Promise<void> {
     case "sync":
       await syncCommand();
       break;
-    case "list":
     case "export":
+      await exportCommand();
+      break;
+    case "logout":
+      await clearAuthState();
+      break;
+    case "list":
     case "import":
       console.error(`dify-cli: '${command}' command not implemented`);
       process.exit(1);
@@ -84,8 +120,9 @@ async function main(): Promise<void> {
       console.error("");
       console.error("Commands:");
       console.error("  sync     Sync local files to Dify Knowledge Base");
+      console.error("  export   Export all app DSLs to dify-settings/dsl/");
+      console.error("  logout   Clear saved auth session");
       console.error("  list     List datasets (not implemented)");
-      console.error("  export   Export datasets (not implemented)");
       console.error("  import   Import datasets (not implemented)");
       process.exit(1);
   }
