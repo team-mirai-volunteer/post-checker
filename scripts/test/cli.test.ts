@@ -70,8 +70,8 @@ describe("dify-cli", () => {
       expect(result.stderr).toContain("Usage:");
     });
 
-    it("list/export/importは未実装エラー", async () => {
-      for (const cmd of ["list", "export", "import"]) {
+    it("list/importは未実装エラー", async () => {
+      for (const cmd of ["list", "import"]) {
         const result = await runCli([cmd]);
 
         expect(result.exitCode).toBe(1);
