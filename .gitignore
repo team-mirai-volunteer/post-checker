@@ -1,0 +1,14 @@
+# Dify local installation (clone separately)
+dify-local/
+
+# Node
+node_modules/
+
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/*.tfvars
+infra/terraform/.terraform.lock.hcl
+infra/terraform/.terraform.tfstate.lock.info
+.env

@@ -1,0 +1,27 @@
+{
+  "name": "post-checker-proto",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup:dify": "git clone --depth 1 https://github.com/langgenius/dify.git dify-local && cp dify-local/docker/.env.example dify-local/docker/.env",
+    "start": "cd dify-local/docker && docker compose up -d && echo '\n✅ Dify started: http://localhost/apps\n'",
+    "stop": "cd dify-local/docker && docker compose down",
+    "restart": "npm run stop && npm run start",
+    "logs": "cd dify-local/docker && docker compose logs -f",
+    "dify:sync": "tsx scripts/dify-cli.ts sync",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "INTEGRATION_TEST=true vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "dotenv": "^17.2.3",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.17"
+  },
+  "dependencies": {
+    "yaml": "^2.8.2"
+  }
+}
