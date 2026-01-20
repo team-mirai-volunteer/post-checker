@@ -42,9 +42,7 @@ describe("runSync unit", () => {
       }),
     ).rejects.toThrow("'datasets' array is required");
   });
-
 });
-
 
 const INTEGRATION_TEST = process.env.INTEGRATION_TEST === "true";
 const DIFY_API_URL = process.env.DIFY_API_URL || "http://localhost";

@@ -153,15 +153,10 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
           const localFile = localFiles.find((f) => f.filename === diff.filename);
           if (!localFile) continue;
           log(`  [CREATE] ${diff.filename}`);
-          const doc = await client.createDocument(
-            datasetId,
-            diff.filename,
-            localFile.content,
-            {
-              indexing_technique: dataset.indexing_technique,
-              process_rule: dataset.process_rule,
-            },
-          );
+          const doc = await client.createDocument(datasetId, diff.filename, localFile.content, {
+            indexing_technique: dataset.indexing_technique,
+            process_rule: dataset.process_rule,
+          });
           batchDocIds.push(doc.id);
           createdDocIds.push(doc.id);
           result.created++;
