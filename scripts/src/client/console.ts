@@ -107,17 +107,16 @@ export class ConsoleClient {
   }
 
   async importDsl(yamlContent: string): Promise<{ app_id: string }> {
-    const url = `${this.baseUrl}/console/api/apps/import`;
-    const formData = new FormData();
-    formData.append("data", yamlContent);
+    const url = `${this.baseUrl}/console/api/apps/imports`;
 
     const response = await this.fetch(url, {
       method: "POST",
       headers: {
         Cookie: this.auth.cookies,
         "X-CSRF-Token": this.auth.csrfToken,
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify({ yaml_content: yamlContent, mode: "yaml-content" }),
     });
 
     if (!response.ok) {

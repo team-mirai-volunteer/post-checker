@@ -31,10 +31,13 @@ interface DslContent {
   app: DslApp;
 }
 
-function extractAppName(yamlContent: string): string | null {
+function extractAppInfo(yamlContent: string): { name: string; mode: string } | null {
   try {
     const parsed = parseYaml(yamlContent) as DslContent;
-    return parsed?.app?.name ?? null;
+    const name = parsed?.app?.name;
+    const mode = parsed?.app?.mode;
+    if (!name || !mode) return null;
+    return { name, mode };
   } catch {
     return null;
   }
@@ -97,8 +100,8 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
         continue;
       }
 
-      const appName = extractAppName(yamlContent);
-      if (!appName) {
+      const appInfo = extractAppInfo(yamlContent);
+      if (!appInfo) {
         results.push({
           filename,
           appName: "",
@@ -111,10 +114,10 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
 
       results.push({
         filename,
-        appName,
+        appName: appInfo.name,
         status: "created",
       });
-      console.log(`  Would create: ${filename} -> ${appName}`);
+      console.log(`  Would create: ${filename} -> ${appInfo.name}`);
     }
     return results;
   }
@@ -142,8 +145,8 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
       continue;
     }
 
-    const appName = extractAppName(yamlContent);
-    if (!appName) {
+    const appInfo = extractAppInfo(yamlContent);
+    if (!appInfo) {
       results.push({
         filename,
         appName: "",
@@ -154,7 +157,7 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
       continue;
     }
 
-    const existingApp = existingAppMap.get(appName);
+    const existingApp = existingAppMap.get(appInfo.name);
 
     try {
       if (existingApp) {
@@ -162,15 +165,15 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
           await client.updateAppDsl(existingApp.id, yamlContent);
           results.push({
             filename,
-            appName,
+            appName: appInfo.name,
             appId: existingApp.id,
             status: "updated",
           });
-          console.log(`  Updated: ${filename} -> ${appName} (app_id: ${existingApp.id})`);
+          console.log(`  Updated: ${filename} -> ${appInfo.name} (app_id: ${existingApp.id})`);
         } else {
           results.push({
             filename,
-            appName,
+            appName: appInfo.name,
             appId: existingApp.id,
             status: "skipped",
           });
@@ -180,17 +183,17 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
         const result = await client.importDsl(yamlContent);
         results.push({
           filename,
-          appName,
+          appName: appInfo.name,
           appId: result.app_id,
           status: "created",
         });
-        console.log(`  Created: ${filename} -> ${appName} (app_id: ${result.app_id})`);
+        console.log(`  Created: ${filename} -> ${appInfo.name} (app_id: ${result.app_id})`);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       results.push({
         filename,
-        appName,
+        appName: appInfo.name,
         status: "failed",
         error: message,
       });
