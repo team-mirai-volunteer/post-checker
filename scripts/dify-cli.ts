@@ -1,11 +1,11 @@
 #!/usr/bin/env tsx
 
 import "dotenv/config";
+import { exportAllDsl } from "./src/application/exportDslUsecase.js";
+import { importAllDsl } from "./src/application/importDslUsecase.js";
+import { setupDify } from "./src/application/setupDifyUsecase.js";
+import { runSync } from "./src/application/syncUsecase.js";
 import { clearAuthState } from "./src/auth/playwright-auth.js";
-import { exportAllDsl } from "./src/usecase/export-dsl.js";
-import { importAllDsl } from "./src/usecase/import-dsl.js";
-import { setupDify } from "./src/usecase/setup-dify.js";
-import { runSync } from "./src/usecase/sync.js";
 
 interface CliConfig {
   apiUrl: string;

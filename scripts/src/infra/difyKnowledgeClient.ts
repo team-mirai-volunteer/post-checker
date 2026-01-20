@@ -1,11 +1,11 @@
+import type { DifyDocumentApiResponse } from "../domain/models/difyDocument.js";
 import type {
   CreateDocumentOptions,
   DifyCreateDocumentResponse,
-  DifyDocument,
   DifyDocumentListResponse,
   DifyUpdateDocumentResponse,
   KnowledgeClientOptions,
-} from "../types.js";
+} from "./types.js";
 
 export class KnowledgeClientError extends Error {
   constructor(
@@ -18,7 +18,7 @@ export class KnowledgeClientError extends Error {
   }
 }
 
-export class KnowledgeClient {
+export class DifyKnowledgeClient {
   private baseUrl: string;
   private apiKey: string;
   private fetchFn: typeof fetch;
@@ -102,9 +102,9 @@ export class KnowledgeClient {
   async listDocuments(
     datasetId: string,
     options: { page?: number; limit?: number } = {},
-  ): Promise<DifyDocument[]> {
+  ): Promise<DifyDocumentApiResponse[]> {
     const { page = 1, limit = 100 } = options;
-    const allDocuments: DifyDocument[] = [];
+    const allDocuments: DifyDocumentApiResponse[] = [];
     let currentPage = page;
     let hasMore = true;
 
@@ -126,7 +126,7 @@ export class KnowledgeClient {
     name: string,
     text: string,
     options: CreateDocumentOptions = {},
-  ): Promise<DifyDocument> {
+  ): Promise<DifyDocumentApiResponse> {
     const body = {
       name,
       text,
@@ -150,7 +150,7 @@ export class KnowledgeClient {
     documentId: string,
     name: string,
     text: string,
-  ): Promise<DifyDocument> {
+  ): Promise<DifyDocumentApiResponse> {
     const body = {
       name,
       text,

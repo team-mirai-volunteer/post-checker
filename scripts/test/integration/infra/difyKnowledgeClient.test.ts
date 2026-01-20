@@ -1,8 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { KnowledgeClient, KnowledgeClientError } from "../../../src/client/knowledge.js";
+import {
+  DifyKnowledgeClient,
+  KnowledgeClientError,
+} from "../../../src/infra/difyKnowledgeClient.js";
 
 // Unit tests (with mocked fetch)
-describe("KnowledgeClient unit", () => {
+describe("DifyKnowledgeClient unit", () => {
   it("listDocuments - 正常系", async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -16,7 +19,7 @@ describe("KnowledgeClient unit", () => {
         }),
     });
 
-    const client = new KnowledgeClient({
+    const client = new DifyKnowledgeClient({
       baseUrl: "http://localhost",
       apiKey: "test-key",
       fetch: mockFetch as typeof fetch,
@@ -62,7 +65,7 @@ describe("KnowledgeClient unit", () => {
           }),
       });
 
-    const client = new KnowledgeClient({
+    const client = new DifyKnowledgeClient({
       baseUrl: "http://localhost",
       apiKey: "test-key",
       fetch: mockFetch as typeof fetch,
@@ -85,7 +88,7 @@ describe("KnowledgeClient unit", () => {
         }),
     });
 
-    const client = new KnowledgeClient({
+    const client = new DifyKnowledgeClient({
       baseUrl: "http://localhost",
       apiKey: "test-key",
       fetch: mockFetch as typeof fetch,
@@ -111,7 +114,7 @@ describe("KnowledgeClient unit", () => {
       text: () => Promise.resolve('{"message":"Invalid API key"}'),
     });
 
-    const client = new KnowledgeClient({
+    const client = new DifyKnowledgeClient({
       baseUrl: "http://localhost",
       apiKey: "invalid-key",
       fetch: mockFetch as typeof fetch,
@@ -127,7 +130,7 @@ describe("KnowledgeClient unit", () => {
       json: () => Promise.resolve({ result: "success" }),
     });
 
-    const client = new KnowledgeClient({
+    const client = new DifyKnowledgeClient({
       baseUrl: "http://localhost",
       apiKey: "test-key",
       fetch: mockFetch as typeof fetch,
@@ -150,8 +153,8 @@ const DIFY_API_URL = process.env.DIFY_API_URL || "http://localhost";
 const DIFY_API_KEY = process.env.DIFY_API_KEY || "";
 const DIFY_TEST_DATASET_ID = process.env.DIFY_TEST_DATASET_ID || "";
 
-describe.skipIf(!INTEGRATION_TEST)("KnowledgeClient integration", () => {
-  const client = new KnowledgeClient({
+describe.skipIf(!INTEGRATION_TEST)("DifyKnowledgeClient integration", () => {
+  const client = new DifyKnowledgeClient({
     baseUrl: DIFY_API_URL,
     apiKey: DIFY_API_KEY,
   });

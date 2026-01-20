@@ -15,9 +15,9 @@ vi.mock("../../../src/auth/playwright-auth.js", () => ({
   }),
 }));
 
-vi.mock("../../../src/client/console.js", () => {
+vi.mock("../../../src/infra/difyConsoleClient.js", () => {
   return {
-    ConsoleClient: class {
+    DifyConsoleClient: class {
       getAllApps = mockGetAllApps;
       importDsl = mockImportDsl;
       updateAppDsl = mockUpdateAppDsl;
@@ -25,7 +25,7 @@ vi.mock("../../../src/client/console.js", () => {
   };
 });
 
-import { importAllDsl } from "../../../src/usecase/import-dsl.js";
+import { importAllDsl } from "../../../src/application/importDslUsecase.js";
 
 const TEST_DIR = "/tmp/test-import-dsl";
 

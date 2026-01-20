@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { getAuthWithPlaywright } from "../auth/playwright-auth.js";
-import { ConsoleClient } from "../client/console.js";
+import { DifyConsoleClient } from "../infra/difyConsoleClient.js";
 
 export interface ImportDslOptions {
   baseUrl: string;
@@ -120,7 +120,7 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
   }
 
   const auth = await getAuthWithPlaywright({ baseUrl, email, password, headless });
-  const client = new ConsoleClient({ baseUrl, auth });
+  const client = new DifyConsoleClient({ baseUrl, auth });
   const existingApps = await client.getAllApps();
   const existingAppMap = new Map(existingApps.map((app) => [app.name, app]));
 

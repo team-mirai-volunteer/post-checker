@@ -28,7 +28,7 @@ export interface ConsoleClientOptions {
   fetch?: typeof fetch;
 }
 
-export class ConsoleClient {
+export class DifyConsoleClient {
   private baseUrl: string;
   private auth: ConsoleAuth;
   private fetch: typeof fetch;
