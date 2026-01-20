@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { getAuthWithPlaywright } from "../../src/auth/playwright-auth.js";
 import { ConsoleClient } from "../../src/client/console.js";
 
+const INTEGRATION_TEST = process.env.INTEGRATION_TEST === "true";
 const DATASET_NAME = "test-dataset-integration";
 
-describe("ConsoleClient Dataset Operations", () => {
+describe.skipIf(!INTEGRATION_TEST)("ConsoleClient Dataset Operations", () => {
   const baseUrl = process.env.DIFY_CONSOLE_URL || "http://localhost";
   const email = process.env.DIFY_EMAIL;
   const password = process.env.DIFY_PASSWORD;
