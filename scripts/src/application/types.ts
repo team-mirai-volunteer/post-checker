@@ -12,7 +12,7 @@ export interface SyncConfig {
  */
 export interface DatasetConfig {
   path: string;
-  dataset_id: string;
+  dataset_name: string;
   indexing_technique?: "high_quality" | "economy";
   process_rule?: { mode: "automatic" | "custom" };
 }

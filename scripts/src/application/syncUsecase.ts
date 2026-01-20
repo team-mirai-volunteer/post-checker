@@ -21,6 +21,7 @@ export interface RunSyncOptions {
 
 export interface SyncResultData {
   datasetId: string;
+  datasetName: string;
   path: string;
   created: number;
   updated: number;
@@ -49,8 +50,28 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
   const diffService = new DocumentDiffService();
   const results: SyncResultData[] = [];
 
+  // Difyからデータセット一覧を取得してname→idのマップを作成
+  log("Fetching datasets from Dify...");
+  const difyDatasets = await client.listDatasets();
+  const datasetNameToId = new Map<string, string>();
+  for (const ds of difyDatasets) {
+    datasetNameToId.set(ds.name, ds.id);
+  }
+  log(`Found ${difyDatasets.length} datasets in Dify`);
+
   for (const dataset of config.datasets) {
-    const result = new SyncResult(dataset.dataset_id, dataset.path);
+    // dataset_nameからdataset_idを解決
+    const datasetId = datasetNameToId.get(dataset.dataset_name);
+    if (!datasetId) {
+      log(`  [ERROR] Dataset not found: ${dataset.dataset_name}`);
+      const result = new SyncResult("", dataset.dataset_name, dataset.path);
+      result.addError("", "skip" as DiffAction, `Dataset not found: ${dataset.dataset_name}`);
+      results.push(result.toPlainObject());
+      continue;
+    }
+
+    log(`Processing dataset: ${dataset.dataset_name} (${datasetId})`);
+    const result = new SyncResult(datasetId, dataset.dataset_name, dataset.path);
 
     // ローカルファイル取得
     if (!existsSync(dataset.path)) {
@@ -64,7 +85,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
     // Difyドキュメント取得
     let difyDocuments: DifyDocument[];
     try {
-      const apiDocs = await client.listDocuments(dataset.dataset_id);
+      const apiDocs = await client.listDocuments(datasetId);
       difyDocuments = apiDocs.map((doc) => DifyDocument.fromApiResponse(doc));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -94,7 +115,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
     for (const diff of deletes) {
       try {
         log(`  [DELETE] ${diff.filename}`);
-        await client.deleteDocument(dataset.dataset_id, diff.documentId as string);
+        await client.deleteDocument(datasetId, diff.documentId as string);
         result.incrementDeleted();
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -114,15 +135,10 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
           const localDoc = localDocuments.find((d) => d.filename === diff.filename);
           if (!localDoc) continue;
           log(`  [CREATE] ${diff.filename}`);
-          const doc = await client.createDocument(
-            dataset.dataset_id,
-            diff.filename,
-            localDoc.content,
-            {
-              indexing_technique: dataset.indexing_technique,
-              process_rule: dataset.process_rule,
-            },
-          );
+          const doc = await client.createDocument(datasetId, diff.filename, localDoc.content, {
+            indexing_technique: dataset.indexing_technique,
+            process_rule: dataset.process_rule,
+          });
           batchDocIds.push(doc.id);
           createdDocIds.push(doc.id);
           result.incrementCreated();
@@ -136,7 +152,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
       // バッチのインデックス完了を待機
       if (batchDocIds.length > 0) {
         log(`  [WAIT] Waiting for ${batchDocIds.length} documents to be indexed...`);
-        await waitForIndexing(client, dataset.dataset_id, batchDocIds, log);
+        await waitForIndexing(client, datasetId, batchDocIds, log);
       }
     }
 
@@ -151,7 +167,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
           if (!localDoc) continue;
           log(`  [UPDATE] ${diff.filename} (${diff.reason})`);
           const doc = await client.updateDocument(
-            dataset.dataset_id,
+            datasetId,
             diff.documentId as string,
             diff.filename,
             localDoc.content,
@@ -168,7 +184,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]
       // バッチのインデックス完了を待機
       if (batchDocIds.length > 0) {
         log(`  [WAIT] Waiting for ${batchDocIds.length} documents to be indexed...`);
-        await waitForIndexing(client, dataset.dataset_id, batchDocIds, log);
+        await waitForIndexing(client, datasetId, batchDocIds, log);
       }
     }
 
