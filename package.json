@@ -12,11 +12,12 @@
     "dify:setup": "tsx scripts/dify-cli.ts setup",
     "dify:sync": "tsx scripts/dify-cli.ts sync",
     "dify:export": "tsx scripts/dify-cli.ts export",
+    "dify:import": "tsx scripts/dify-cli.ts import",
     "dify:logout": "tsx scripts/dify-cli.ts logout",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "INTEGRATION_TEST=true vitest run",
-    "format": "biome check --write . && prettier --write 'dify-settings/**/*.yml'",
+    "format": "biome check --write scripts/ *.json && prettier --write 'dify-settings/**/*.yml'",
     "lint": "biome lint .",
     "check": "biome check --write .",
     "prepare": "simple-git-hooks"

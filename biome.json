@@ -21,7 +21,10 @@
       "src/**/*.jsx",
       "*.json"
     ],
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "experimentalScannerIgnores": [
+      "dify-local/**"
+    ]
   },
   "assist": {
     "actions": {

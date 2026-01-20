@@ -105,4 +105,62 @@ export class ConsoleClient {
     const json = (await response.json()) as { data: string };
     return json.data;
   }
+
+  async importDsl(yamlContent: string): Promise<{ app_id: string }> {
+    const url = `${this.baseUrl}/console/api/apps/import`;
+    const formData = new FormData();
+    formData.append("data", yamlContent);
+
+    const response = await this.fetch(url, {
+      method: "POST",
+      headers: {
+        Cookie: this.auth.cookies,
+        "X-CSRF-Token": this.auth.csrfToken,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Import DSL error ${response.status}: ${text}`);
+    }
+
+    return response.json() as Promise<{ app_id: string }>;
+  }
+
+  async updateAppDsl(appId: string, yamlContent: string): Promise<void> {
+    const url = `${this.baseUrl}/console/api/apps/${appId}/import`;
+    const formData = new FormData();
+    formData.append("data", yamlContent);
+
+    const response = await this.fetch(url, {
+      method: "POST",
+      headers: {
+        Cookie: this.auth.cookies,
+        "X-CSRF-Token": this.auth.csrfToken,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Update App DSL error ${response.status}: ${text}`);
+    }
+  }
+
+  async deleteApp(appId: string): Promise<void> {
+    const url = `${this.baseUrl}/console/api/apps/${appId}`;
+    const response = await this.fetch(url, {
+      method: "DELETE",
+      headers: {
+        Cookie: this.auth.cookies,
+        "X-CSRF-Token": this.auth.csrfToken,
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Delete App error ${response.status}: ${text}`);
+    }
+  }
 }
