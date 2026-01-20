@@ -1,9 +1,12 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { KnowledgeClient } from "../client/knowledge.js";
-import type { DiffAction, LocalFile, SyncConfig, SyncResult } from "../types.js";
-import { calculateDiff, computeHash } from "./diff.js";
+import { DifyDocument } from "../domain/models/difyDocument.js";
+import { LocalDocument } from "../domain/models/localDocument.js";
+import { SyncResult } from "../domain/models/syncResult.js";
+import { type DiffAction, DocumentDiffService } from "../domain/services/documentDiffService.js";
+import { DifyKnowledgeClient } from "../infra/difyKnowledgeClient.js";
+import type { SyncConfig } from "./types.js";
 
 const BATCH_SIZE = 10;
 const INDEXING_POLL_INTERVAL = 2000; // 2秒
@@ -16,7 +19,17 @@ export interface RunSyncOptions {
   onProgress?: (message: string) => void;
 }
 
-export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
+export interface SyncResultData {
+  datasetId: string;
+  path: string;
+  created: number;
+  updated: number;
+  deleted: number;
+  skipped: number;
+  errors: Array<{ filename: string; action: DiffAction; error: string }>;
+}
+
+export async function runSync(options: RunSyncOptions): Promise<SyncResultData[]> {
   const { baseUrl, apiKey, configPath, onProgress } = options;
   const log = onProgress ?? (() => {});
 
@@ -32,47 +45,37 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
     throw new Error(`Invalid config: 'datasets' array is required`);
   }
 
-  const client = new KnowledgeClient({ baseUrl, apiKey });
-  const results: SyncResult[] = [];
+  const client = new DifyKnowledgeClient({ baseUrl, apiKey });
+  const diffService = new DocumentDiffService();
+  const results: SyncResultData[] = [];
 
   for (const dataset of config.datasets) {
-    const result: SyncResult = {
-      datasetId: dataset.dataset_id,
-      path: dataset.path,
-      created: 0,
-      updated: 0,
-      deleted: 0,
-      skipped: 0,
-      errors: [],
-    };
+    const result = new SyncResult(dataset.dataset_id, dataset.path);
 
     // ローカルファイル取得
     if (!existsSync(dataset.path)) {
       log(`  [WARN] Path not found: ${dataset.path}`);
-      results.push(result);
+      results.push(result.toPlainObject());
       continue;
     }
 
-    const localFiles = getLocalFiles(dataset.path);
+    const localDocuments = getLocalDocuments(dataset.path);
 
     // Difyドキュメント取得
-    let difyDocuments: Awaited<ReturnType<typeof client.listDocuments>>;
+    let difyDocuments: DifyDocument[];
     try {
-      difyDocuments = await client.listDocuments(dataset.dataset_id);
+      const apiDocs = await client.listDocuments(dataset.dataset_id);
+      difyDocuments = apiDocs.map((doc) => DifyDocument.fromApiResponse(doc));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log(`  [ERROR] Failed to list documents: ${message}`);
-      result.errors.push({
-        filename: "",
-        action: "skip" as DiffAction,
-        error: `Failed to list documents: ${message}`,
-      });
-      results.push(result);
+      result.addError("", "skip" as DiffAction, `Failed to list documents: ${message}`);
+      results.push(result.toPlainObject());
       continue;
     }
 
     // 差分計算
-    const diffs = calculateDiff(localFiles, difyDocuments);
+    const diffs = diffService.calculateDiff(localDocuments, difyDocuments);
 
     // アクション別に分類
     const creates = diffs.filter((d) => d.action === "create");
@@ -83,7 +86,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
     // SKIP処理
     for (const diff of skips) {
       log(`  [SKIP]   ${diff.filename}`);
-      result.skipped++;
+      result.incrementSkipped();
     }
 
     // DELETE処理（インデックス待機不要）
@@ -91,15 +94,11 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
       try {
         log(`  [DELETE] ${diff.filename}`);
         await client.deleteDocument(dataset.dataset_id, diff.documentId as string);
-        result.deleted++;
+        result.incrementDeleted();
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         log(`  [ERROR] ${diff.filename}: ${message}`);
-        result.errors.push({
-          filename: diff.filename,
-          action: diff.action,
-          error: message,
-        });
+        result.addError(diff.filename, diff.action, message);
       }
     }
 
@@ -111,13 +110,13 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
 
       for (const diff of batch) {
         try {
-          const localFile = localFiles.find((f) => f.filename === diff.filename);
-          if (!localFile) continue;
+          const localDoc = localDocuments.find((d) => d.filename === diff.filename);
+          if (!localDoc) continue;
           log(`  [CREATE] ${diff.filename}`);
           const doc = await client.createDocument(
             dataset.dataset_id,
             diff.filename,
-            localFile.content,
+            localDoc.content,
             {
               indexing_technique: dataset.indexing_technique,
               process_rule: dataset.process_rule,
@@ -125,15 +124,11 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
           );
           batchDocIds.push(doc.id);
           createdDocIds.push(doc.id);
-          result.created++;
+          result.incrementCreated();
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           log(`  [ERROR] ${diff.filename}: ${message}`);
-          result.errors.push({
-            filename: diff.filename,
-            action: diff.action,
-            error: message,
-          });
+          result.addError(diff.filename, diff.action, message);
         }
       }
 
@@ -151,25 +146,21 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
 
       for (const diff of batch) {
         try {
-          const localFile = localFiles.find((f) => f.filename === diff.filename);
-          if (!localFile) continue;
+          const localDoc = localDocuments.find((d) => d.filename === diff.filename);
+          if (!localDoc) continue;
           log(`  [UPDATE] ${diff.filename} (${diff.reason})`);
           const doc = await client.updateDocument(
             dataset.dataset_id,
             diff.documentId as string,
             diff.filename,
-            localFile.content,
+            localDoc.content,
           );
           batchDocIds.push(doc.id);
-          result.updated++;
+          result.incrementUpdated();
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           log(`  [ERROR] ${diff.filename}: ${message}`);
-          result.errors.push({
-            filename: diff.filename,
-            action: diff.action,
-            error: message,
-          });
+          result.addError(diff.filename, diff.action, message);
         }
       }
 
@@ -180,14 +171,14 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
       }
     }
 
-    results.push(result);
+    results.push(result.toPlainObject());
   }
 
   return results;
 }
 
 async function waitForIndexing(
-  client: KnowledgeClient,
+  client: DifyKnowledgeClient,
   datasetId: string,
   docIds: string[],
   log: (msg: string) => void,
@@ -200,14 +191,15 @@ async function waitForIndexing(
       throw new Error(`Timeout waiting for indexing (${pending.size} documents remaining)`);
     }
 
-    const docs = await client.listDocuments(datasetId);
+    const apiDocs = await client.listDocuments(datasetId);
+    const docs = apiDocs.map((d) => DifyDocument.fromApiResponse(d));
 
     for (const docId of [...pending]) {
       const doc = docs.find((d) => d.id === docId);
-      if (doc?.indexing_status === "completed") {
+      if (doc?.isIndexingCompleted()) {
         pending.delete(docId);
         log(`  [INDEXED] ${doc.name}`);
-      } else if (doc?.indexing_status === "error") {
+      } else if (doc?.isIndexingError()) {
         pending.delete(docId);
         log(`  [INDEX_ERROR] ${doc.name}: ${doc.error}`);
       }
@@ -223,22 +215,17 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function getLocalFiles(dirPath: string): LocalFile[] {
-  const files: LocalFile[] = [];
+function getLocalDocuments(dirPath: string): LocalDocument[] {
+  const documents: LocalDocument[] = [];
 
   const entries = readdirSync(dirPath, { withFileTypes: true });
   for (const entry of entries) {
     if (entry.isFile() && entry.name.endsWith(".md")) {
       const filePath = join(dirPath, entry.name);
       const content = readFileSync(filePath, "utf-8");
-      files.push({
-        filename: entry.name,
-        path: filePath,
-        content,
-        hash: computeHash(content),
-      });
+      documents.push(LocalDocument.create(entry.name, filePath, content));
     }
   }
 
-  return files;
+  return documents;
 }

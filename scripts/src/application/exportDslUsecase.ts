@@ -2,7 +2,7 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { getAuthWithPlaywright } from "../auth/playwright-auth.js";
-import { type ConsoleApp, ConsoleClient } from "../client/console.js";
+import { type ConsoleApp, DifyConsoleClient } from "../infra/difyConsoleClient.js";
 
 export interface ExportDslOptions {
   baseUrl: string;
@@ -32,7 +32,7 @@ export async function exportAllDsl(options: ExportDslOptions): Promise<ExportRes
   const auth = await getAuthWithPlaywright({ baseUrl, email, password, headless });
 
   // 2. Console API クライアントを作成
-  const client = new ConsoleClient({ baseUrl, auth });
+  const client = new DifyConsoleClient({ baseUrl, auth });
 
   // 3. アプリ一覧を取得
   let apps = await client.getAllApps();

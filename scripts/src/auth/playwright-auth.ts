@@ -1,6 +1,6 @@
 // Playwrightを使ってDify Console認証情報を取得する
 import { type BrowserContext, chromium } from "playwright";
-import type { ConsoleAuth } from "../client/console.js";
+import type { ConsoleAuth } from "../infra/difyConsoleClient.js";
 
 const AUTH_STATE_PATH = ".dify-auth-state.json";
 
