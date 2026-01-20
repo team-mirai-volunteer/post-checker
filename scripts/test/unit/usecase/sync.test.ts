@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { runSync } from "../../src/usecase/sync.js";
+import { runSync } from "../../../src/usecase/sync.js";
 
 const TEST_DIR = "/tmp/dify-sync-test";
 const CONFIG_PATH = join(TEST_DIR, "sync.yaml");

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { DifyDocument, LocalFile } from "../../src/types.js";
-import { calculateDiff, computeHash } from "../../src/usecase/diff.js";
+import type { DifyDocument, LocalFile } from "../../../src/types.js";
+import { calculateDiff, computeHash } from "../../../src/usecase/diff.js";
 
 function makeLocalFile(filename: string, content: string = "content"): LocalFile {
   return {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { KnowledgeClient, KnowledgeClientError } from "../../src/client/knowledge.js";
+import { KnowledgeClient, KnowledgeClientError } from "../../../src/client/knowledge.js";
 
 // Unit tests (with mocked fetch)
 describe("KnowledgeClient unit", () => {

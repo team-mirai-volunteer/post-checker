@@ -13,3 +13,5 @@ infra/terraform/.terraform.lock.hcl
 infra/terraform/.terraform.tfstate.lock.info
 .env
 .dify-auth-state.json
+playwright-report/
+test-results/

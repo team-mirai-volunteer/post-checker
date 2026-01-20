@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-const CLI_PATH = path.resolve(__dirname, "../dify-cli.ts");
+const CLI_PATH = path.resolve(__dirname, "../../dify-cli.ts");
 
 function runCli(
   args: string[],
