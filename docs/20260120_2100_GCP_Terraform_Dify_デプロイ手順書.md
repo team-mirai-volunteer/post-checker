@@ -92,20 +92,55 @@ cloud_run_memory        = "512Mi"
 
 # Dify Configuration
 dify_version = "0.15.3"
-
-# Secrets（セキュアな値を設定）
-secret_key    = "your-random-secret-key-minimum-32-characters-long"
-init_password = "your-initial-admin-password"
 ```
 
-#### シークレットキーの生成方法
+> **注意**: `secret_key` と `init_password` は terraform.tfvars に記載しないでください。
+> 以下の「シークレットの設定」セクションで GCP Secret Manager 経由で設定します。
+
+### 2.4 シークレットの設定（GCP Secret Manager）
+
+セキュリティのベストプラクティスとして、機密情報は GCP Secret Manager で管理します。
+
+#### シークレットキーの生成
 
 ```bash
 # 32文字以上のランダム文字列を生成
 openssl rand -hex 32
 ```
 
-### 2.4 .gitignore の確認
+#### GCP Secret Manager にシークレットを作成
+
+```bash
+# プロジェクトIDを設定
+export PROJECT_ID="your-actual-project-id"
+
+# secret_key を作成
+echo -n "$(openssl rand -hex 32)" | gcloud secrets create dify-secret-key \
+  --project=$PROJECT_ID \
+  --replication-policy="automatic" \
+  --data-file=-
+
+# init_password を作成
+echo -n "your-secure-admin-password" | gcloud secrets create dify-init-password \
+  --project=$PROJECT_ID \
+  --replication-policy="automatic" \
+  --data-file=-
+```
+
+#### Terraform変数でシークレット名を指定
+
+terraform.tfvars に以下を追加:
+
+```hcl
+# Secret Manager のシークレット名（値ではなく名前のみ）
+secret_key_secret_name    = "dify-secret-key"
+init_password_secret_name = "dify-init-password"
+```
+
+> **重要**: tfvarsファイルには機密値を直接記載せず、Secret Manager のシークレット名のみを指定します。
+> Terraform は `data.google_secret_manager_secret_version` を使用して実行時に値を取得します。
+
+### 2.5 .gitignore の確認
 
 `terraform.tfvars` がコミットされないことを確認:
 
@@ -148,7 +183,7 @@ terraform plan
 主要リソース:
 | リソース | 説明 |
 |---------|------|
-| google_project_service | 6つのAPI有効化 |
+| google_project_service | 7つのAPI有効化 |
 | google_compute_network | VPCネットワーク |
 | google_compute_subnetwork | サブネット |
 | google_vpc_access_connector | VPCコネクタ |
@@ -157,6 +192,7 @@ terraform plan
 | google_cloud_run_v2_service | Cloud Run x 3 (API/Web/Worker) |
 | google_secret_manager_secret | シークレット x 3 |
 | google_service_account | サービスアカウント |
+| google_storage_bucket | Cloud Storage（ナレッジ・ファイル保存用） |
 
 ### 3.3 デプロイ実行
 
@@ -302,19 +338,25 @@ terraform destroy
 
 ## Phase 6: デプロイ後の設定（管理画面操作）
 
-### 6.1 URL環境変数の設定
+### 6.1 URL環境変数について
 
-デプロイ後、Web/APIのURLが確定したら、環境変数を更新する必要があります。
+Terraform設定では、Cloud RunサービスのURLは `google_cloud_run_v2_service.*.uri` を使用して
+自動的に他のサービスから参照されるように設計されています。
 
-1. `terraform output` でURLを取得
-2. `cloudrun.tf` の以下の空文字を実際のURLに更新:
-   - `CONSOLE_WEB_URL`
-   - `CONSOLE_API_URL`
-   - `SERVICE_API_URL`
-   - `APP_WEB_URL`
-   - `APP_API_URL`
+```hcl
+# cloudrun.tf での自動参照の例
+env {
+  name  = "CONSOLE_API_URL"
+  value = google_cloud_run_v2_service.api.uri
+}
+```
 
-3. 再度 `terraform apply` を実行
+これにより、1回の `terraform apply` でデプロイが完了し、
+手動でURLをコピーして再適用する必要はありません。
+
+> **注意**: 現在のTerraform設定でURL参照が空文字になっている場合は、
+> 上記のような動的参照に更新することを推奨します。
+> `depends_on` を適切に設定することで、依存関係も解決されます。
 
 ### 6.2 カスタムドメインの設定（オプション）
 
@@ -323,14 +365,39 @@ terraform destroy
 3. 「ドメイン」タブ → 「カスタムドメインを追加」
 4. ドメインを入力してDNS設定を行う
 
-### 6.3 Identity-Aware Proxy（IAP）の設定（オプション・推奨）
+### 6.3 認証設定（本番環境では必須）
 
-セキュリティ強化のため、IAPを設定することを推奨:
+本番環境では、認証なしでのアクセスを許可しないでください。
+以下のいずれかの認証方式を設定する必要があります。
+
+#### 方式A: Identity-Aware Proxy（IAP）の設定
+
+Google Workspaceアカウントでの認証に最適:
 
 1. [IAP Console](https://console.cloud.google.com/security/iap) にアクセス
 2. Cloud Runサービスを選択
 3. IAPを有効化
 4. 許可するユーザー/グループを設定
+
+#### 方式B: Firebase Authentication
+
+一般ユーザー向けの認証に最適:
+
+1. [Firebase Console](https://console.firebase.google.com/) でプロジェクトを設定
+2. 認証プロバイダー（Google, Email/Password等）を有効化
+3. Difyアプリケーションに認証ミドルウェアを追加
+
+### 6.4 Cloud Armor（WAF）の設定
+
+DDoS攻撃やWebアプリケーション攻撃からの保護:
+
+1. [Cloud Armor Console](https://console.cloud.google.com/net-security/securitypolicies) にアクセス
+2. 「セキュリティポリシーを作成」をクリック
+3. ルールを追加（IP制限、レート制限、OWASP Top 10対策等）
+4. Cloud Runサービスにポリシーを適用
+
+> **dev環境のみ**: 開発環境では認証なしでのアクセスを一時的に許可できますが、
+> staging/prod環境では必ず認証を設定してください。
 
 ---
 
@@ -384,9 +451,11 @@ Cloud SQLの自動バックアップが有効になっていることを確認:
 | Cloud Run (従量課金) | ~$5-20 |
 | VPC Access Connector | ~$20-30 |
 | Secret Manager | ~$0.06 |
+| Cloud Storage | ~$0.02/GB（使用量により変動） |
 | **合計** | **約$70-110/月** |
 
-> **注意**: 実際のコストはトラフィック量やストレージ使用量により変動します
+> **注意**: 実際のコストはトラフィック量やストレージ使用量により変動します。
+> Cloud Storageは保存するナレッジデータやファイルの量に応じて増加します（10GB で約$0.20/月）。
 
 ---
 
