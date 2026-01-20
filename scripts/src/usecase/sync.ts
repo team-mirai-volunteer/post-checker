@@ -35,9 +35,48 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
   const client = new KnowledgeClient({ baseUrl, apiKey });
   const results: SyncResult[] = [];
 
+  // dataset名からIDを解決するためのマップを作成
+  log("Fetching dataset list...");
+  const allDatasets = await client.listDatasets();
+  const datasetNameToId = new Map(allDatasets.map((d) => [d.name, d.id]));
+
   for (const dataset of config.datasets) {
+    // dataset_nameからIDを解決（存在しない場合は作成）
+    let datasetId = datasetNameToId.get(dataset.dataset_name);
+    if (!datasetId) {
+      log(`  [CREATE_DATASET] ${dataset.dataset_name}`);
+      try {
+        const newDataset = await client.createDataset({
+          name: dataset.dataset_name,
+          indexing_technique: dataset.indexing_technique,
+        });
+        datasetId = newDataset.id;
+        datasetNameToId.set(dataset.dataset_name, datasetId);
+        log(`  [CREATED] Dataset ${dataset.dataset_name} (${datasetId})`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        log(`  [ERROR] Failed to create dataset: ${message}`);
+        results.push({
+          datasetId: "",
+          path: dataset.path,
+          created: 0,
+          updated: 0,
+          deleted: 0,
+          skipped: 0,
+          errors: [
+            {
+              filename: "",
+              action: "skip" as DiffAction,
+              error: `Failed to create dataset: ${message}`,
+            },
+          ],
+        });
+        continue;
+      }
+    }
+
     const result: SyncResult = {
-      datasetId: dataset.dataset_id,
+      datasetId,
       path: dataset.path,
       created: 0,
       updated: 0,
@@ -58,7 +97,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
     // Difyドキュメント取得
     let difyDocuments: Awaited<ReturnType<typeof client.listDocuments>>;
     try {
-      difyDocuments = await client.listDocuments(dataset.dataset_id);
+      difyDocuments = await client.listDocuments(datasetId);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log(`  [ERROR] Failed to list documents: ${message}`);
@@ -90,7 +129,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
     for (const diff of deletes) {
       try {
         log(`  [DELETE] ${diff.filename}`);
-        await client.deleteDocument(dataset.dataset_id, diff.documentId as string);
+        await client.deleteDocument(datasetId, diff.documentId as string);
         result.deleted++;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -115,7 +154,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
           if (!localFile) continue;
           log(`  [CREATE] ${diff.filename}`);
           const doc = await client.createDocument(
-            dataset.dataset_id,
+            datasetId,
             diff.filename,
             localFile.content,
             {
@@ -140,7 +179,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
       // バッチのインデックス完了を待機
       if (batchDocIds.length > 0) {
         log(`  [WAIT] Waiting for ${batchDocIds.length} documents to be indexed...`);
-        await waitForIndexing(client, dataset.dataset_id, batchDocIds, log);
+        await waitForIndexing(client, datasetId, batchDocIds, log);
       }
     }
 
@@ -155,7 +194,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
           if (!localFile) continue;
           log(`  [UPDATE] ${diff.filename} (${diff.reason})`);
           const doc = await client.updateDocument(
-            dataset.dataset_id,
+            datasetId,
             diff.documentId as string,
             diff.filename,
             localFile.content,
@@ -176,7 +215,7 @@ export async function runSync(options: RunSyncOptions): Promise<SyncResult[]> {
       // バッチのインデックス完了を待機
       if (batchDocIds.length > 0) {
         log(`  [WAIT] Waiting for ${batchDocIds.length} documents to be indexed...`);
-        await waitForIndexing(client, dataset.dataset_id, batchDocIds, log);
+        await waitForIndexing(client, datasetId, batchDocIds, log);
       }
     }
 

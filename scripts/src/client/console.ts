@@ -22,6 +22,31 @@ export interface ConsoleAppsResponse {
   total: number;
 }
 
+export interface ConsoleDataset {
+  id: string;
+  name: string;
+  description: string;
+  permission: string;
+  indexing_technique: string;
+  document_count: number;
+  word_count: number;
+}
+
+export interface ConsoleDatasetsResponse {
+  data: ConsoleDataset[];
+  has_more: boolean;
+  limit: number;
+  page: number;
+  total: number;
+}
+
+export interface CreateDatasetParams {
+  name: string;
+  description?: string;
+  indexing_technique?: "high_quality" | "economy";
+  permission?: "only_me" | "all_team_members";
+}
+
 export interface ConsoleClientOptions {
   baseUrl: string;
   auth: ConsoleAuth;
@@ -160,6 +185,60 @@ export class ConsoleClient {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`Delete App error ${response.status}: ${text}`);
+    }
+  }
+
+  // Dataset operations
+
+  async listDatasets(page = 1, limit = 100): Promise<ConsoleDatasetsResponse> {
+    return this.request<ConsoleDatasetsResponse>(
+      "GET",
+      `/console/api/datasets?page=${page}&limit=${limit}`,
+    );
+  }
+
+  async getAllDatasets(): Promise<ConsoleDataset[]> {
+    const datasets: ConsoleDataset[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.listDatasets(page);
+      datasets.push(...response.data);
+      hasMore = response.has_more;
+      page++;
+    }
+
+    return datasets;
+  }
+
+  async getDatasetByName(name: string): Promise<ConsoleDataset | null> {
+    const datasets = await this.getAllDatasets();
+    return datasets.find((d) => d.name === name) ?? null;
+  }
+
+  async createDataset(params: CreateDatasetParams): Promise<ConsoleDataset> {
+    return this.request<ConsoleDataset>("POST", "/console/api/datasets", {
+      name: params.name,
+      description: params.description ?? "",
+      indexing_technique: params.indexing_technique ?? "high_quality",
+      permission: params.permission ?? "only_me",
+    });
+  }
+
+  async deleteDataset(datasetId: string): Promise<void> {
+    const url = `${this.baseUrl}/console/api/datasets/${datasetId}`;
+    const response = await this.fetch(url, {
+      method: "DELETE",
+      headers: {
+        Cookie: this.auth.cookies,
+        "X-CSRF-Token": this.auth.csrfToken,
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Delete Dataset error ${response.status}: ${text}`);
     }
   }
 }

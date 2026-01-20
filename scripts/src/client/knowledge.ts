@@ -1,6 +1,9 @@
 import type {
+  CreateDatasetOptions,
   CreateDocumentOptions,
   DifyCreateDocumentResponse,
+  DifyDataset,
+  DifyDatasetListResponse,
   DifyDocument,
   DifyDocumentListResponse,
   DifyUpdateDocumentResponse,
@@ -26,7 +29,8 @@ export class KnowledgeClient {
   private retryDelay = 1000;
 
   constructor(options: KnowledgeClientOptions) {
-    this.baseUrl = options.baseUrl.replace(/\/$/, "");
+    // 末尾のスラッシュと /v1 を除去（APIパスに /v1 を含むため）
+    this.baseUrl = options.baseUrl.replace(/\/v1\/?$/, "").replace(/\/$/, "");
     this.apiKey = options.apiKey;
     this.fetchFn = options.fetch ?? fetch;
   }
@@ -170,6 +174,43 @@ export class KnowledgeClient {
   async deleteDocument(datasetId: string, documentId: string): Promise<void> {
     await this.request<void>(`/v1/datasets/${datasetId}/documents/${documentId}`, {
       method: "DELETE",
+    });
+  }
+
+  async listDatasets(): Promise<DifyDataset[]> {
+    const allDatasets: DifyDataset[] = [];
+    let currentPage = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.request<DifyDatasetListResponse>(
+        `/v1/datasets?page=${currentPage}&limit=100`,
+      );
+
+      allDatasets.push(...response.data);
+      hasMore = response.has_more;
+      currentPage++;
+    }
+
+    return allDatasets;
+  }
+
+  async getDatasetByName(name: string): Promise<DifyDataset | null> {
+    const datasets = await this.listDatasets();
+    return datasets.find((d) => d.name === name) ?? null;
+  }
+
+  async createDataset(options: CreateDatasetOptions): Promise<DifyDataset> {
+    const body = {
+      name: options.name,
+      description: options.description ?? "",
+      indexing_technique: options.indexing_technique ?? "high_quality",
+      permission: options.permission ?? "only_me",
+    };
+
+    return this.request<DifyDataset>("/v1/datasets", {
+      method: "POST",
+      body: JSON.stringify(body),
     });
   }
 }

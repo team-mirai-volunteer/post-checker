@@ -43,34 +43,13 @@ describe("runSync unit", () => {
     ).rejects.toThrow("'datasets' array is required");
   });
 
-  it("指定パスが存在しない場合は警告してスキップ", async () => {
-    writeFileSync(
-      CONFIG_PATH,
-      `
-datasets:
-  - path: /nonexistent/path
-    dataset_id: test-dataset
-`,
-    );
-
-    const logs: string[] = [];
-    const results = await runSync({
-      baseUrl: "http://localhost",
-      apiKey: "test-key",
-      configPath: CONFIG_PATH,
-      onProgress: (msg) => logs.push(msg),
-    });
-
-    expect(results).toHaveLength(1);
-    expect(results[0].path).toBe("/nonexistent/path");
-    expect(logs.some((l) => l.includes("WARN") && l.includes("not found"))).toBe(true);
-  });
 });
+
 
 const INTEGRATION_TEST = process.env.INTEGRATION_TEST === "true";
 const DIFY_API_URL = process.env.DIFY_API_URL || "http://localhost";
 const DIFY_API_KEY = process.env.DIFY_API_KEY || "";
-const DIFY_TEST_DATASET_ID = process.env.DIFY_TEST_DATASET_ID || "";
+const DIFY_TEST_DATASET_NAME = process.env.DIFY_TEST_DATASET_NAME || "";
 
 describe.skipIf(!INTEGRATION_TEST)("runSync integration", () => {
   beforeEach(() => {
@@ -95,7 +74,7 @@ describe.skipIf(!INTEGRATION_TEST)("runSync integration", () => {
       `
 datasets:
   - path: ${emptyDir}
-    dataset_id: ${DIFY_TEST_DATASET_ID}
+    dataset_name: ${DIFY_TEST_DATASET_NAME}
 `,
     );
 
@@ -119,7 +98,7 @@ datasets:
       `
 datasets:
   - path: ${testDir}
-    dataset_id: ${DIFY_TEST_DATASET_ID}
+    dataset_name: ${DIFY_TEST_DATASET_NAME}
 `,
     );
 

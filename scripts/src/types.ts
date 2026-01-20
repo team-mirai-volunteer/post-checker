@@ -5,9 +5,34 @@ export interface SyncConfig {
 
 export interface DatasetConfig {
   path: string;
-  dataset_id: string;
+  dataset_name: string; // 名前でdatasetを指定
   indexing_technique?: "high_quality" | "economy";
   process_rule?: { mode: "automatic" | "custom" };
+}
+
+// Dataset一覧API レスポンス
+export interface DifyDataset {
+  id: string;
+  name: string;
+  description: string;
+  permission: string;
+  data_source_type: string;
+  indexing_technique: string;
+  app_count: number;
+  document_count: number;
+  word_count: number;
+  created_by: string;
+  created_at: number;
+  updated_by: string;
+  updated_at: number;
+}
+
+export interface DifyDatasetListResponse {
+  data: DifyDataset[];
+  has_more: boolean;
+  limit: number;
+  total: number;
+  page: number;
 }
 
 // 差分計算の結果
@@ -104,4 +129,11 @@ export interface KnowledgeClientOptions {
 export interface CreateDocumentOptions {
   indexing_technique?: "high_quality" | "economy";
   process_rule?: { mode: "automatic" | "custom" };
+}
+
+export interface CreateDatasetOptions {
+  name: string;
+  description?: string;
+  indexing_technique?: "high_quality" | "economy";
+  permission?: "only_me" | "all_team_members";
 }
