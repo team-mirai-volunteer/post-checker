@@ -70,13 +70,11 @@ describe("dify-cli", () => {
       expect(result.stderr).toContain("Usage:");
     });
 
-    it("list/importは未実装エラー", async () => {
-      for (const cmd of ["list", "import"]) {
-        const result = await runCli([cmd]);
+    it("listは未実装エラー", async () => {
+      const result = await runCli(["list"]);
 
-        expect(result.exitCode).toBe(1);
-        expect(result.stderr).toContain("not implemented");
-      }
+      expect(result.exitCode).toBe(1);
+      expect(result.stderr).toContain("not implemented");
     });
   });
 });

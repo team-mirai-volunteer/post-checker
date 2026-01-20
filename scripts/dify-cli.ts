@@ -3,6 +3,7 @@
 import "dotenv/config";
 import { clearAuthState } from "./src/auth/playwright-auth.js";
 import { exportAllDsl } from "./src/usecase/export-dsl.js";
+import { importAllDsl } from "./src/usecase/import-dsl.js";
 import { setupDify } from "./src/usecase/setup-dify.js";
 import { runSync } from "./src/usecase/sync.js";
 
@@ -50,6 +51,69 @@ async function exportCommand(): Promise<void> {
 
   console.log(`\nExport complete: ${success} succeeded, ${failed} failed`);
   console.log(`DSLs saved to: ${outputDir}/`);
+
+  if (failed > 0) {
+    process.exit(1);
+  }
+}
+
+interface ImportCommandOptions {
+  inputDir: string;
+  force: boolean;
+  dryRun: boolean;
+}
+
+function parseImportArgs(args: string[]): ImportCommandOptions {
+  const options: ImportCommandOptions = {
+    inputDir: "dify-settings/dsl",
+    force: false,
+    dryRun: false,
+  };
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--input-dir" || arg === "-i") {
+      options.inputDir = args[++i] || options.inputDir;
+    } else if (arg === "--force" || arg === "-f") {
+      options.force = true;
+    } else if (arg === "--dry-run") {
+      options.dryRun = true;
+    }
+  }
+
+  return options;
+}
+
+async function importCommand(args: string[]): Promise<void> {
+  const baseUrl = process.env.DIFY_CONSOLE_URL || "http://localhost";
+  const email = process.env.DIFY_EMAIL;
+  const password = process.env.DIFY_PASSWORD;
+  const options = parseImportArgs(args);
+
+  const results = await importAllDsl({
+    baseUrl,
+    inputDir: options.inputDir,
+    email,
+    password,
+    force: options.force,
+    dryRun: options.dryRun,
+    headless: true,
+  });
+
+  const created = results.filter((r) => r.status === "created").length;
+  const updated = results.filter((r) => r.status === "updated").length;
+  const skipped = results.filter((r) => r.status === "skipped").length;
+  const failed = results.filter((r) => r.status === "failed").length;
+
+  if (options.dryRun) {
+    console.log(
+      `\nDry run complete: ${created} would create, ${updated} would update, ${skipped} would skip`,
+    );
+  } else {
+    console.log(
+      `\nImport complete: ${created} created, ${updated} updated, ${skipped} skipped, ${failed} failed`,
+    );
+  }
 
   if (failed > 0) {
     process.exit(1);
@@ -114,8 +178,10 @@ async function main(): Promise<void> {
     case "logout":
       await clearAuthState();
       break;
-    case "list":
     case "import":
+      await importCommand(args.slice(1));
+      break;
+    case "list":
       console.error(`dify-cli: '${command}' command not implemented`);
       process.exit(1);
       break;
@@ -126,9 +192,9 @@ async function main(): Promise<void> {
       console.error("  setup    Run initial Dify setup (if not already set up)");
       console.error("  sync     Sync local files to Dify Knowledge Base");
       console.error("  export   Export all app DSLs to dify-settings/dsl/");
+      console.error("  import   Import DSLs from dify-settings/dsl/ to Dify");
       console.error("  logout   Clear saved auth session");
       console.error("  list     List datasets (not implemented)");
-      console.error("  import   Import datasets (not implemented)");
       process.exit(1);
   }
 }
