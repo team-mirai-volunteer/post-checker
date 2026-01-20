@@ -16,6 +16,7 @@ export interface SyncErrorInfo {
  */
 export class SyncResult {
   readonly datasetId: string;
+  readonly datasetName: string;
   readonly path: string;
   private _created: number;
   private _updated: number;
@@ -23,8 +24,9 @@ export class SyncResult {
   private _skipped: number;
   private _errors: SyncErrorInfo[];
 
-  constructor(datasetId: string, path: string) {
+  constructor(datasetId: string, datasetName: string, path: string) {
     this.datasetId = datasetId;
+    this.datasetName = datasetName;
     this.path = path;
     this._created = 0;
     this._updated = 0;
@@ -107,6 +109,7 @@ export class SyncResult {
    */
   toPlainObject(): {
     datasetId: string;
+    datasetName: string;
     path: string;
     created: number;
     updated: number;
@@ -116,6 +119,7 @@ export class SyncResult {
   } {
     return {
       datasetId: this.datasetId,
+      datasetName: this.datasetName,
       path: this.path,
       created: this._created,
       updated: this._updated,

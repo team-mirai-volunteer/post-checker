@@ -2,17 +2,24 @@ import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockListDocuments, mockCreateDocument, mockUpdateDocument, mockDeleteDocument } =
-  vi.hoisted(() => ({
-    mockListDocuments: vi.fn(),
-    mockCreateDocument: vi.fn(),
-    mockUpdateDocument: vi.fn(),
-    mockDeleteDocument: vi.fn(),
-  }));
+const {
+  mockListDatasets,
+  mockListDocuments,
+  mockCreateDocument,
+  mockUpdateDocument,
+  mockDeleteDocument,
+} = vi.hoisted(() => ({
+  mockListDatasets: vi.fn(),
+  mockListDocuments: vi.fn(),
+  mockCreateDocument: vi.fn(),
+  mockUpdateDocument: vi.fn(),
+  mockDeleteDocument: vi.fn(),
+}));
 
 vi.mock("../../../src/infra/difyKnowledgeClient.js", () => {
   return {
     DifyKnowledgeClient: class {
+      listDatasets = mockListDatasets;
       listDocuments = mockListDocuments;
       createDocument = mockCreateDocument;
       updateDocument = mockUpdateDocument;
@@ -34,6 +41,12 @@ describe("runSync", () => {
     }
     mkdirSync(KNOWLEDGE_DIR, { recursive: true });
     vi.clearAllMocks();
+    // デフォルトでtest-datasetを返す
+    mockListDatasets.mockResolvedValue([
+      { id: "test-dataset", name: "test-dataset" },
+      { id: "dataset-1", name: "dataset-1" },
+      { id: "dataset-2", name: "dataset-2" },
+    ]);
     mockListDocuments.mockResolvedValue([]);
     mockCreateDocument.mockResolvedValue({
       id: "new-doc-id",
@@ -83,7 +96,7 @@ describe("runSync", () => {
         `
 datasets:
   - path: /nonexistent/path
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -112,7 +125,7 @@ datasets:
         `
 datasets:
   - path: ${testDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -156,7 +169,7 @@ datasets:
         `
 datasets:
   - path: ${testDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -207,7 +220,7 @@ datasets:
         `
 datasets:
   - path: ${testDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -247,7 +260,7 @@ datasets:
         `
 datasets:
   - path: ${testDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -291,7 +304,7 @@ datasets:
         `
 datasets:
   - path: ${testDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -321,7 +334,7 @@ datasets:
         `
 datasets:
   - path: ${testDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 
@@ -356,9 +369,9 @@ datasets:
         `
 datasets:
   - path: ${testDir1}
-    dataset_id: dataset-1
+    dataset_name: dataset-1
   - path: ${testDir2}
-    dataset_id: dataset-2
+    dataset_name: dataset-2
 `,
       );
 
@@ -412,7 +425,7 @@ datasets:
         `
 datasets:
   - path: ${emptyDir}
-    dataset_id: test-dataset
+    dataset_name: test-dataset
 `,
       );
 

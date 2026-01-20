@@ -2,6 +2,8 @@ import type { DifyDocumentApiResponse } from "../domain/models/difyDocument.js";
 import type {
   CreateDocumentOptions,
   DifyCreateDocumentResponse,
+  DifyDatasetApiResponse,
+  DifyDatasetListResponse,
   DifyDocumentListResponse,
   DifyUpdateDocumentResponse,
   KnowledgeClientOptions,
@@ -171,5 +173,26 @@ export class DifyKnowledgeClient {
     await this.request<void>(`/v1/datasets/${datasetId}/documents/${documentId}`, {
       method: "DELETE",
     });
+  }
+
+  async listDatasets(
+    options: { page?: number; limit?: number } = {},
+  ): Promise<DifyDatasetApiResponse[]> {
+    const { page = 1, limit = 100 } = options;
+    const allDatasets: DifyDatasetApiResponse[] = [];
+    let currentPage = page;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.request<DifyDatasetListResponse>(
+        `/v1/datasets?page=${currentPage}&limit=${limit}`,
+      );
+
+      allDatasets.push(...response.data);
+      hasMore = response.has_more;
+      currentPage++;
+    }
+
+    return allDatasets;
   }
 }

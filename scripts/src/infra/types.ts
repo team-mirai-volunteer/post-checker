@@ -45,3 +45,33 @@ export interface CreateDocumentOptions {
   indexing_technique?: "high_quality" | "economy";
   process_rule?: { mode: "automatic" | "custom" };
 }
+
+/**
+ * Dify Dataset API レスポンス（単一データセット）
+ */
+export interface DifyDatasetApiResponse {
+  id: string;
+  name: string;
+  description: string;
+  permission: string;
+  data_source_type: string;
+  indexing_technique: string;
+  app_count: number;
+  document_count: number;
+  word_count: number;
+  created_by: string;
+  created_at: number;
+  updated_by: string;
+  updated_at: number;
+}
+
+/**
+ * Dify Dataset一覧 API レスポンス
+ */
+export interface DifyDatasetListResponse {
+  data: DifyDatasetApiResponse[];
+  has_more: boolean;
+  limit: number;
+  total: number;
+  page: number;
+}

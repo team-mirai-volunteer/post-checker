@@ -1,7 +1,12 @@
 # ディレクトリ → Knowledge Base のマッピング
 datasets:
   - path: knowledges/manifesto
-    dataset_id: 7961d11f-af96-44bd-aa0d-b3d8e7b9d270
+    dataset_name: party_info
+    indexing_technique: high_quality
+    process_rule:
+      mode: automatic
+  - path: knowledges/law
+    dataset_name: law
     indexing_technique: high_quality
     process_rule:
       mode: automatic
