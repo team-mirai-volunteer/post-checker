@@ -92,6 +92,8 @@ async function importCommand(args: string[]): Promise<void> {
   const baseUrl = process.env.DIFY_CONSOLE_URL || "http://localhost";
   const email = process.env.DIFY_EMAIL;
   const password = process.env.DIFY_PASSWORD;
+  const knowledgeApiUrl = process.env.DIFY_API_URL;
+  const knowledgeApiKey = process.env.DIFY_API_KEY;
   const options = parseImportArgs(args);
 
   const results = await importAllDsl({
@@ -102,6 +104,8 @@ async function importCommand(args: string[]): Promise<void> {
     force: options.force,
     dryRun: options.dryRun,
     headless: true,
+    knowledgeApiUrl,
+    knowledgeApiKey,
   });
 
   const created = results.filter((r) => r.status === "created").length;

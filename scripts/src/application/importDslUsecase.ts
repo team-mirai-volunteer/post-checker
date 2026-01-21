@@ -2,7 +2,12 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { getAuthWithPlaywright } from "../auth/playwright-auth.js";
+import {
+  type DatasetMapping,
+  replacePlaceholdersWithDatasetIds,
+} from "../domain/dslTransformer.js";
 import { DifyConsoleClient } from "../infra/difyConsoleClient.js";
+import { DifyKnowledgeClient } from "../infra/difyKnowledgeClient.js";
 
 export interface ImportDslOptions {
   baseUrl: string;
@@ -12,6 +17,10 @@ export interface ImportDslOptions {
   force?: boolean;
   dryRun?: boolean;
   headless?: boolean;
+  /** Knowledge APIのベースURL（プレースホルダー解決用） */
+  knowledgeApiUrl?: string;
+  /** Knowledge APIのAPIキー（プレースホルダー解決用） */
+  knowledgeApiKey?: string;
 }
 
 export interface ImportResult {
@@ -49,6 +58,8 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
     force = false,
     dryRun = false,
     headless = false,
+    knowledgeApiUrl,
+    knowledgeApiKey,
   } = options;
 
   const inputDirExists = await fs
@@ -61,14 +72,44 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
   }
 
   const files = await fs.readdir(inputDir);
-  const ymlFiles = files.filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"));
 
-  if (ymlFiles.length === 0) {
+  // .normalized.yml を優先、なければ通常の .yml を使う
+  const normalizedFiles = files.filter((f) => f.endsWith(".normalized.yml"));
+  const rawFiles = files.filter(
+    (f) =>
+      (f.endsWith(".yml") || f.endsWith(".yaml")) && !f.endsWith(".normalized.yml"),
+  );
+
+  // normalized版がある場合はそちらを優先
+  const normalizedBaseNames = new Set(
+    normalizedFiles.map((f) => f.replace(".normalized.yml", "")),
+  );
+  const filesToImport = [
+    ...normalizedFiles,
+    ...rawFiles.filter((f) => {
+      const baseName = f.replace(/\.(yml|yaml)$/, "");
+      return !normalizedBaseNames.has(baseName);
+    }),
+  ];
+
+  if (filesToImport.length === 0) {
     console.log("No DSL files found in input directory.");
     return [];
   }
 
-  console.log(`Found ${ymlFiles.length} DSL file(s).`);
+  console.log(`Found ${filesToImport.length} DSL file(s).`);
+
+  // dataset一覧を取得（プレースホルダー解決用）
+  let datasets: DatasetMapping[] = [];
+  if (knowledgeApiUrl && knowledgeApiKey) {
+    const knowledgeClient = new DifyKnowledgeClient({
+      baseUrl: knowledgeApiUrl,
+      apiKey: knowledgeApiKey,
+    });
+    const datasetList = await knowledgeClient.listDatasets();
+    datasets = datasetList.map((d) => ({ id: d.id, name: d.name }));
+    console.log(`Found ${datasets.length} dataset(s) for placeholder resolution.`);
+  }
 
   if (dryRun) {
     console.log("[DRY RUN] Importing DSLs to Dify...\n");
@@ -79,7 +120,7 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
   const results: ImportResult[] = [];
 
   if (dryRun) {
-    for (const filename of ymlFiles) {
+    for (const filename of filesToImport) {
       const filepath = path.join(inputDir, filename);
       let yamlContent: string;
 
@@ -124,7 +165,7 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
   const existingApps = await client.getAllApps();
   const existingAppMap = new Map(existingApps.map((app) => [app.name, app]));
 
-  for (const filename of ymlFiles) {
+  for (const filename of filesToImport) {
     const filepath = path.join(inputDir, filename);
     let yamlContent: string;
 
@@ -154,12 +195,30 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
       continue;
     }
 
+    // プレースホルダーを実際のdataset_idに解決
+    let resolvedContent = yamlContent;
+    if (datasets.length > 0 && filename.endsWith(".normalized.yml")) {
+      try {
+        resolvedContent = replacePlaceholdersWithDatasetIds(yamlContent, datasets);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        results.push({
+          filename,
+          appName,
+          status: "failed",
+          error: `Failed to resolve placeholders: ${message}`,
+        });
+        console.error(`  Failed: ${filename} - Failed to resolve placeholders: ${message}`);
+        continue;
+      }
+    }
+
     const existingApp = existingAppMap.get(appName);
 
     try {
       if (existingApp) {
         if (force) {
-          await client.updateAppDsl(existingApp.id, yamlContent);
+          await client.updateAppDsl(existingApp.id, resolvedContent);
           results.push({
             filename,
             appName,
@@ -177,7 +236,7 @@ export async function importAllDsl(options: ImportDslOptions): Promise<ImportRes
           console.log(`  Skipped: ${filename} (already exists, use --force to overwrite)`);
         }
       } else {
-        const result = await client.importDsl(yamlContent);
+        const result = await client.importDsl(resolvedContent);
         results.push({
           filename,
           appName,

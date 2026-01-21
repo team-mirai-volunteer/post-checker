@@ -8,7 +8,8 @@ export interface DatasetMapping {
 
 /**
  * DSL内のdataset_idsをプレースホルダーに置換する
- * 62e28aa6-2b35-4cb9-9516-4ee934084c84 → {{dataset:party_info}}
+ * 62e28aa6-2b35-4cb9-9516-4ee934084c84 → "{{dataset:party_info}}"
+ * YAMLで{{}}がマッピング構文と誤解されないようクォートで囲む
  */
 export function replaceDatasetIdsWithPlaceholders(
   dslContent: string,
@@ -22,7 +23,7 @@ export function replaceDatasetIdsWithPlaceholders(
   return dslContent.replace(uuidPattern, (match) => {
     const name = idToName.get(match.toLowerCase());
     if (name) {
-      return `{{dataset:${name}}}`;
+      return `"{{dataset:${name}}}"`;
     }
     return match;
   });
@@ -30,7 +31,7 @@ export function replaceDatasetIdsWithPlaceholders(
 
 /**
  * DSL内のプレースホルダーを実際のdataset_idに置換する
- * {{dataset:party_info}} → 62e28aa6-2b35-4cb9-9516-4ee934084c84
+ * "{{dataset:party_info}}" → 62e28aa6-2b35-4cb9-9516-4ee934084c84
  */
 export function replacePlaceholdersWithDatasetIds(
   dslContent: string,
@@ -38,7 +39,8 @@ export function replacePlaceholdersWithDatasetIds(
 ): string {
   const nameToId = new Map(datasets.map((d) => [d.name, d.id]));
 
-  const placeholderPattern = /\{\{dataset:([^}]+)\}\}/g;
+  // クォート付きプレースホルダーに対応
+  const placeholderPattern = /"?\{\{dataset:([^}]+)\}\}"?/g;
 
   return dslContent.replace(placeholderPattern, (_match, name: string) => {
     const id = nameToId.get(name);
@@ -53,7 +55,8 @@ export function replacePlaceholdersWithDatasetIds(
  * DSL内のプレースホルダーを抽出する
  */
 export function extractPlaceholders(dslContent: string): string[] {
-  const placeholderPattern = /\{\{dataset:([^}]+)\}\}/g;
+  // クォート付きプレースホルダーに対応
+  const placeholderPattern = /"?\{\{dataset:([^}]+)\}\}"?/g;
   const names: string[] = [];
 
   for (const match of dslContent.matchAll(placeholderPattern)) {

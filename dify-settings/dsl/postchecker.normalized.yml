@@ -152,7 +152,7 @@ workflow:
       width: 242
     - data:
         dataset_ids:
-        - {{dataset:party_info}}
+        - "{{dataset:party_info}}"
         desc: Allows you to query text content related to user questions from the
           Knowledge
         query_attachment_selector: []

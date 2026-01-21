@@ -106,18 +106,28 @@ export class DifyConsoleClient {
     return json.data;
   }
 
-  async importDsl(yamlContent: string): Promise<{ app_id: string }> {
-    const url = `${this.baseUrl}/console/api/apps/import`;
-    const formData = new FormData();
-    formData.append("data", yamlContent);
+  async importDsl(yamlContent: string, appId?: string): Promise<{ app_id: string }> {
+    const url = `${this.baseUrl}/console/api/apps/imports`;
+    const payload: {
+      mode: string;
+      yaml_content: string;
+      app_id?: string;
+    } = {
+      mode: "yaml-content",
+      yaml_content: yamlContent,
+    };
+    if (appId) {
+      payload.app_id = appId;
+    }
 
     const response = await this.fetch(url, {
       method: "POST",
       headers: {
         Cookie: this.auth.cookies,
         "X-CSRF-Token": this.auth.csrfToken,
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -129,23 +139,7 @@ export class DifyConsoleClient {
   }
 
   async updateAppDsl(appId: string, yamlContent: string): Promise<void> {
-    const url = `${this.baseUrl}/console/api/apps/${appId}/import`;
-    const formData = new FormData();
-    formData.append("data", yamlContent);
-
-    const response = await this.fetch(url, {
-      method: "POST",
-      headers: {
-        Cookie: this.auth.cookies,
-        "X-CSRF-Token": this.auth.csrfToken,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Update App DSL error ${response.status}: ${text}`);
-    }
+    await this.importDsl(yamlContent, appId);
   }
 
   async deleteApp(appId: string): Promise<void> {
