@@ -1,5 +1,4 @@
 // DSL内のdataset_idをプレースホルダーに変換するトランスフォーマー
-import { parse } from "yaml";
 
 export interface DatasetMapping {
   id: string;
@@ -51,53 +50,3 @@ export function replacePlaceholdersWithDatasetIds(
   });
 }
 
-/**
- * DSL内のプレースホルダーを抽出する
- */
-export function extractPlaceholders(dslContent: string): string[] {
-  // クォート付きプレースホルダーに対応
-  const placeholderPattern = /"?\{\{dataset:([^}]+)\}\}"?/g;
-  const names: string[] = [];
-
-  for (const match of dslContent.matchAll(placeholderPattern)) {
-    if (!names.includes(match[1])) {
-      names.push(match[1]);
-    }
-  }
-
-  return names;
-}
-
-/**
- * DSL内のdataset_idsを抽出する（UUID形式）
- */
-export function extractDatasetIds(dslContent: string): string[] {
-  // YAMLをパースしてdataset_idsを探す
-  const parsed = parse(dslContent);
-  const ids: string[] = [];
-
-  function findDatasetIds(obj: unknown): void {
-    if (obj === null || obj === undefined) return;
-
-    if (Array.isArray(obj)) {
-      for (const item of obj) {
-        findDatasetIds(item);
-      }
-    } else if (typeof obj === "object") {
-      const record = obj as Record<string, unknown>;
-      if ("dataset_ids" in record && Array.isArray(record.dataset_ids)) {
-        for (const id of record.dataset_ids) {
-          if (typeof id === "string" && !ids.includes(id)) {
-            ids.push(id);
-          }
-        }
-      }
-      for (const value of Object.values(record)) {
-        findDatasetIds(value);
-      }
-    }
-  }
-
-  findDatasetIds(parsed);
-  return ids;
-}
