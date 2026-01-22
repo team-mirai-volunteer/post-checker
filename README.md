@@ -52,6 +52,10 @@ npm run dify:export
 
 # セッションをクリア（再ログインしたい時）
 npm run dify:logout
+
+# note.comから記事を取得してknowledges/note/に保存
+npm run fetch:note-articles <username>
+# 例: npm run fetch:note-articles team_mirai_jp
 ```
 
 ## ディレクトリ構成
@@ -64,7 +68,8 @@ npm run dify:logout
 ├── infra/            # インフラ設定
 │   └── terraform/    # Terraform設定
 ├── knowledges/       # RAG用ナレッジファイル
-│   └── manifesto/    # マニフェスト等
+│   ├── manifesto/    # マニフェスト等
+│   └── note/         # note.com記事（index.yaml含む）
 └── scripts/          # ユーティリティスクリプト
     ├── src/          # スクリプト本体
     └── test/         # テスト
