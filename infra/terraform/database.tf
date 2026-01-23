@@ -47,6 +47,13 @@ resource "google_sql_database" "dify" {
   project  = var.project_id
 }
 
+# PostgreSQL Database for Plugin Daemon
+resource "google_sql_database" "dify_plugin" {
+  name     = "dify_plugin"
+  instance = google_sql_database_instance.main.name
+  project  = var.project_id
+}
+
 # Generate random password for database
 resource "random_password" "db_password" {
   length  = 32

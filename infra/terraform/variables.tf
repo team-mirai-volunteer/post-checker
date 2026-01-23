@@ -76,7 +76,7 @@ variable "cloud_run_memory" {
 variable "dify_version" {
   description = "Dify Docker image version"
   type        = string
-  default     = "0.15.3"
+  default     = "1.11.4"
 }
 
 variable "secret_key" {
