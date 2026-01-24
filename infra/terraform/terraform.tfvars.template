@@ -1,26 +1,4 @@
-# GCP Project Configuration
-project_id  = "${TF_VAR_PROJECT_ID}"
-region      = "asia-northeast1"
-environment = "dev"
-
-# Cloud SQL Configuration (minimal for small-scale)
-db_tier = "db-f1-micro"
-db_name = "dify"
-db_user = "dify"
-
-# Redis Configuration (minimal for small-scale)
-redis_memory_size_gb = 1
-redis_tier           = "BASIC"
-
-# Cloud Run Configuration (minimal for small-scale)
-cloud_run_min_instances = 0
-cloud_run_max_instances = 2
-cloud_run_cpu           = "1"
-cloud_run_memory        = "2Gi"
-
-# Dify Configuration
-dify_version = "1.11.4"
-
-# Secrets
+project_id    = "${TF_VAR_PROJECT_ID}"
 secret_key    = "${TF_VAR_SECRET_KEY}"
 init_password = "${TF_VAR_INIT_PASSWORD}"
+domain        = "${TF_VAR_DOMAIN}"
