@@ -56,17 +56,18 @@ fi
 cd "$DIFY_DIR/docker"
 
 # =============================================================================
-# Create .env
+# Create .env (skip if already exists to preserve keys)
 # =============================================================================
-echo "Creating .env..."
-cp .env.example .env
+if [ ! -f .env ]; then
+  echo "Creating .env..."
+  cp .env.example .env
 
-# Generate random keys for plugin daemon
-PLUGIN_DAEMON_KEY=$(openssl rand -hex 32)
-INNER_API_KEY=$(openssl rand -hex 32)
+  # Generate random keys for plugin daemon
+  PLUGIN_DAEMON_KEY=$(openssl rand -hex 32)
+  INNER_API_KEY=$(openssl rand -hex 32)
 
-# Update .env with our settings
-cat >> .env << 'ENVEOF'
+  # Update .env with our settings
+  cat >> .env << 'ENVEOF'
 
 # =============================================================================
 # Cloud SQL Database (managed by Terraform)
@@ -100,9 +101,12 @@ SECRET_KEY=${secret_key}
 INIT_PASSWORD=${init_password}
 ENVEOF
 
-# Add generated keys
-echo "PLUGIN_DAEMON_KEY=$PLUGIN_DAEMON_KEY" >> .env
-echo "INNER_API_KEY=$INNER_API_KEY" >> .env
+  # Add generated keys
+  echo "PLUGIN_DAEMON_KEY=$PLUGIN_DAEMON_KEY" >> .env
+  echo "INNER_API_KEY=$INNER_API_KEY" >> .env
+else
+  echo ".env already exists; skipping regeneration"
+fi
 
 # =============================================================================
 # Create docker-compose.override.yml to disable local postgres
