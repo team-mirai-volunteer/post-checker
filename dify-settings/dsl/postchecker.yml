@@ -197,12 +197,82 @@ workflow:
     - data:
         isInIteration: false
         isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1769264824818-source-1769264927152-target
+      selected: false
+      source: '1769264824818'
+      sourceHandle: source
+      target: '1769264927152'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
         sourceType: template-transform
-        targetType: end
-      id: 1769256163730-source-1769256488676-target
+        targetType: template-transform
+      id: 1769256163730-source-1769264927152-target
+      selected: false
       source: '1769256163730'
       sourceHandle: source
-      target: '1769256488676'
+      target: '1769264927152'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1769264927152-source-1769265182872-target
+      selected: false
+      source: '1769264927152'
+      sourceHandle: source
+      target: '1769265182872'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1769253839816-source-1769264824818-target
+      source: '1769253839816'
+      sourceHandle: source
+      target: '1769264824818'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1769255396970-source-1769264824818-target
+      source: '1769255396970'
+      sourceHandle: source
+      target: '1769264824818'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1769255589411-source-1769264824818-target
+      source: '1769255589411'
+      sourceHandle: source
+      target: '1769264824818'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1769255623283-source-1769264824818-target
+      source: '1769255623283'
+      sourceHandle: source
+      target: '1769264824818'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -288,10 +358,10 @@ workflow:
           role: system
           text: "あなたは選挙コンプライアンスの専門家である弁護士です。 \nユーザーから入力された「発信予定のテキスト」に対し、以下の「参照法令（公職選挙法）」に基づいて適法性を厳格に審査してください。\
             \ \n\n## 参照法令\n {{#context#}}\n\n## 審査基準 \n1. 事前運動の禁止（投票依頼とみなされる表現はないか）\
-            \ \n2. 虚偽事項の公表（事実と異なる経歴や実績の示唆） \n3. 利害誘導・買収の示唆 4. 未成年者の選挙運動など、主体に関する制限\
-            \ \n\n## 出力形式\n### \U0001F3DB️ 1. 公職選挙法チェック\n - **判定:** 【問題なし / 要修正 /\
-            \ 違法の恐れあり】のいずれか\n - **根拠条文:** 抵触する可能性のある条文があれば引用\n - **アドバイス:** 修正が必要な場合の具体的な言い換え案\
-            \ \n\n## ユーザー入力テキスト\n {{#1769251549581.query#}}"
+            \ \n2. 虚偽事項の公表（事実と異なる経歴や実績の示唆） \n3. 利害誘導・買収の示唆 \n4. 未成年者の選挙運動など、主体に関する制限\
+            \ \n\n## 出力形式\n### \U0001F3DB️ 1. 公職選挙法チェック\n - **判定:** リスクの有無について言及\n\
+            \ - **根拠条文:** 抵触する可能性のある条文があれば引用\n - **アドバイス:** 修正が必要な場合の具体的な言い換え案 \n\n\
+            ## ユーザー入力テキスト\n {{#1769251549581.query#}}"
         selected: false
         title: 公職選挙法チェック
         type: llm
@@ -438,9 +508,8 @@ workflow:
           text: "あなたはチームの広報アーカイブ担当です。\nユーザーの入力テキストが、過去のNote記事や公式発言と矛盾していないか、あるいは再利用できる過去の良い表現がないか確認してください。\
             \ \n\n## 参照情報（過去の公式発言・Note）\n {{#context#}} \n\n## チェック項目 \n1. 一貫性: 過去に言ったことと矛盾していないか\
             \ \n2. 文脈: 過去の文脈を無視した発信になっていないか \n\n## 出力形式（Markdown） \n### \U0001F5E3\
-            ️ 3. 過去発言（Note等）チェック \n- **判定:** 【一貫性あり / 矛盾の可能性 / 新規トピック】 \n- **参照:**\
-            \ （関連する過去記事や発言があればタイトル等を引用） \n- **コメント:** （過去の文脈との整合性について）\n\n## ユーザー入力テキスト\n\
-            {{#1769251549581.query#}}\n"
+            ️ 3. 過去発言（Note等）チェック \n- **判定:** 【整合 / 矛盾あり / 要注意】\n- **参照:** （関連する過去記事や発言があればタイトル等を引用）\
+            \ \n- **コメント:** （過去の文脈との整合性について）\n\n## ユーザー入力テキスト\n{{#1769251549581.query#}}\n"
         selected: false
         title: 公式発言との一致確認
         type: llm
@@ -499,11 +568,8 @@ workflow:
 
             ### 🔥 4. 炎上・レピュテーションリスク
 
-            - **リスクレベル:** 【低 / 中 / 高】
-
             - **リスク要因:** （炎上の火種になりそうな箇所）
 
-            - **マイルドな言い換え:** （角が立たない表現案）
 
             '
         selected: false
@@ -519,17 +585,14 @@ workflow:
       positionAbsolute:
         x: 683
         y: 665.121375480874
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 241
     - data:
         selected: false
-        template: '# 🗳️ ファクトチェック＆リスク判定レポート
-
-
-          **対象テキスト:**
+        template: '**対象テキスト:**
 
           {{ query }}
 
@@ -553,13 +616,8 @@ workflow:
 
           {{risk}}
 
-
-          ---
-
-          **総合判定:**
-
-          以上のチェック結果を踏まえ、投稿の可否を最終判断してください。'
-        title: アウトプット整形
+          '
+        title: チェック内容の集約
         type: template-transform
         variables:
         - value_selector:
@@ -589,10 +647,98 @@ workflow:
       height: 50
       id: '1769256163730'
       position:
-        x: 984
+        x: 1027.8060193286685
         y: 282
       positionAbsolute:
-        x: 984
+        x: 1027.8060193286685
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: qwen2.5:32b
+          provider: langgenius/ollama/ollama
+        prompt_template:
+        - id: 742fbdbf-42cb-411c-a1e7-87934843ca5f
+          role: system
+          text: "あなたは選挙事務所の「選対本部長」です。 \nユーザー（候補者やスタッフ）が作成したSNS投稿案に対して、各専門家（弁護士、政策秘書、リスク担当など）がチェックを行いました。\n\
+            提供された「専門家レポート（Context）」を総合的に分析し、ユーザーに対して分かりやすいフィードバックを行ってください。 \nやることは以下のタスクのみとし、修正例の提示は行わないでください。\n\
+            \n## 参照する専門家レポート\n### 公職選挙法チェック\n{{#1769253839816.text#}}\n### 政策ビジョンの整合性チェック\n\
+            {{#1769255396970.text#}}\n### 公式発言との一致確認\n{{#1769255589411.text#}}\n###\
+            \ 炎上リスク判定\n{{#1769255623283.text#}}\n\n## あなたのタスク \n専門家の意見をそのままコピペするのではなく、以下の構成で分かりやすく伝えてください。\
+            \ \n\n**重要な指摘事項（要約）** \n- 専門家レポートの中で、特に致命的なリスク（公選法違反や炎上リスク）があれば簡潔に指摘。\
+            \ \n- 些末な指摘は無視して、重要なポイントのみに絞る。 \n\n"
+        selected: false
+        title: 総括
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1769264824818'
+      position:
+        x: 1027.8060193286685
+        y: 392.9968420437926
+      positionAbsolute:
+        x: 1027.8060193286685
+        y: 392.9968420437926
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        selected: false
+        template: '# 🗳️ ファクトチェック＆リスク判定
+
+
+          ## 総括
+
+          {{ summary }}
+
+
+          ---
+
+
+          ## 詳細レポート
+
+          {{ output }}
+
+
+          ---
+
+
+          以上のチェック結果を踏まえ、投稿の可否を最終判断してください。
+
+          '
+        title: アウトプット整形
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1769264824818'
+          - text
+          value_type: string
+          variable: summary
+        - value_selector:
+          - '1769256163730'
+          - output
+          value_type: string
+          variable: output
+      height: 50
+      id: '1769264927152'
+      position:
+        x: 1402.6424484929998
+        y: 282
+      positionAbsolute:
+        x: 1402.6424484929998
         y: 282
       selected: false
       sourcePosition: right
@@ -602,20 +748,20 @@ workflow:
     - data:
         outputs:
         - value_selector:
-          - '1769256163730'
+          - '1769264927152'
           - output
           value_type: string
-          variable: result
+          variable: output
         selected: false
         title: 出力
         type: end
       height: 87
-      id: '1769256488676'
+      id: '1769265182872'
       position:
-        x: 1285
+        x: 1711.464951944548
         y: 282
       positionAbsolute:
-        x: 1285
+        x: 1711.464951944548
         y: 282
       selected: false
       sourcePosition: right
@@ -623,7 +769,7 @@ workflow:
       type: custom
       width: 241
     viewport:
-      x: 21.004135455752248
-      y: 72.95930288601599
-      zoom: 1.0726022829847892
+      x: -1315.0401575747173
+      y: 220.67872933677535
+      zoom: 1.1392358545721186
   rag_pipeline_variables: []
