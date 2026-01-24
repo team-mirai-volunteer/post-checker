@@ -57,6 +57,58 @@ npm run dify:logout
 npm run fetch:note-articles <username>
 # 例: npm run fetch:note-articles team_mirai_jp
 ```
+## ローカルLLMを使った動作確認
+
+DifyのLLMブロックを動かすには、ローカルLLMが必要です。Ollamaを使う場合の手順：
+
+### 1. Ollamaのインストール
+
+```bash
+# macOS（Homebrew）
+brew install ollama
+
+# または公式サイトからダウンロード
+# https://ollama.com/download
+```
+
+### 2. モデルの起動
+
+```bash
+# LLMモデル（チャット用）
+ollama run qwen2.5:32b
+
+# 埋め込みモデル（ナレッジベース用）
+ollama pull nomic-embed-text
+```
+
+> 初回はモデルのダウンロードに時間がかかります（qwen2.5:32bは約20GB）。
+> 軽量モデルを使いたい場合は `ollama run qwen2.5:7b` でも動作します。
+
+### 3. DifyでOllamaを設定
+
+1. Dify起動後、http://localhost/apps にアクセス
+2. 右上のユーザーアイコン → 「設定」
+3. 「モデルプロバイダー」→「Ollama」を追加
+
+**LLMモデル（チャット用）:**
+- Model Name: `qwen2.5:32b`
+- Model Type: `LLM`
+- Base URL: `http://host.docker.internal:11434`
+
+**埋め込みモデル（ナレッジベース用）:**
+- Model Name: `nomic-embed-text`
+- Model Type: `Text Embedding`
+- Base URL: `http://host.docker.internal:11434`
+
+4. 保存後、ワークフローのLLMブロック・ナレッジベースで選択可能になります
+
+### 4. 終了時
+
+```bash
+# Ollamaサーバーを停止
+ollama stop qwen2.5:32b
+ollama stop nomic-embed-text
+```
 
 ## ディレクトリ構成
 

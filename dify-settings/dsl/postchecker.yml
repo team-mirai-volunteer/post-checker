@@ -1,16 +1,16 @@
 app:
-  description: ""
+  description: ''
   icon: 🤖
-  icon_background: "#FFEAD5"
-  mode: advanced-chat
+  icon_background: '#FFEAD5'
+  mode: workflow
   name: PostChecker
   use_icon_as_answer_icon: false
 dependencies:
-  - current_identifier: null
-    type: marketplace
-    value:
-      marketplace_plugin_unique_identifier: langgenius/openai:0.2.8@aae2be0913b8c6f0b80cff58e08d7a8b4c214569b41778413fcaea204561ff16
-      version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/ollama:0.1.2@fcf107badccaf57948634ad2c557d393c3894138d83f4eb3f959e9a1d3a86512
+    version: null
 kind: app
 version: 0.5.0
 workflow:
@@ -19,17 +19,17 @@ workflow:
   features:
     file_upload:
       allowed_file_extensions:
-        - .JPG
-        - .JPEG
-        - .PNG
-        - .GIF
-        - .WEBP
-        - .SVG
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
       allowed_file_types:
-        - image
+      - image
       allowed_file_upload_methods:
-        - local_file
-        - remote_url
+      - local_file
+      - remote_url
       enabled: false
       fileUploadConfig:
         attachment_image_file_size_limit: 2
@@ -46,12 +46,12 @@ workflow:
         enabled: false
         number_limits: 3
         transfer_methods:
-          - local_file
-          - remote_url
+        - local_file
+        - remote_url
       number_limits: 3
-    opening_statement: ""
+    opening_statement: ''
     retriever_resource:
-      enabled: false
+      enabled: true
     sensitive_word_avoidance:
       enabled: false
     speech_to_text:
@@ -61,340 +61,569 @@ workflow:
       enabled: false
     text_to_speech:
       enabled: false
-      language: ""
-      voice: ""
+      language: ''
+      voice: ''
   graph:
     edges:
-      - data:
-          sourceType: start
-          targetType: knowledge-retrieval
-        id: 1711528914102-1711528915811
-        source: "1711528914102"
-        sourceHandle: source
-        target: "1711528915811"
-        targetHandle: target
-        type: custom
-      - data:
-          sourceType: knowledge-retrieval
-          targetType: llm
-        id: 1711528915811-1711528917469
-        source: "1711528915811"
-        sourceHandle: source
-        target: "1711528917469"
-        targetHandle: target
-        type: custom
-      - data:
-          isInIteration: false
-          isInLoop: false
-          sourceType: start
-          targetType: llm
-        id: 1711528914102-source-1768929751312-target
-        source: "1711528914102"
-        sourceHandle: source
-        target: "1768929751312"
-        targetHandle: target
-        type: custom
-        zIndex: 0
-      - data:
-          isInIteration: false
-          isInLoop: false
-          sourceType: llm
-          targetType: llm
-        id: 1711528917469-source-1768930233595-target
-        source: "1711528917469"
-        sourceHandle: source
-        target: "1768930233595"
-        targetHandle: target
-        type: custom
-        zIndex: 0
-      - data:
-          isInIteration: false
-          isInLoop: false
-          sourceType: llm
-          targetType: answer
-        id: 1768930233595-source-1711528919501-target
-        source: "1768930233595"
-        sourceHandle: source
-        target: "1711528919501"
-        targetHandle: target
-        type: custom
-        zIndex: 0
-      - data:
-          isInLoop: false
-          sourceType: llm
-          targetType: llm
-        id: 1768929751312-source-1768930233595-target
-        source: "1768929751312"
-        sourceHandle: source
-        target: "1768930233595"
-        targetHandle: target
-        type: custom
-        zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1769251549581-source-1769253770699-target
+      source: '1769251549581'
+      sourceHandle: source
+      target: '1769253770699'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1769253770699-source-1769253839816-target
+      source: '1769253770699'
+      sourceHandle: source
+      target: '1769253839816'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1769251549581-source-1769255381008-target
+      source: '1769251549581'
+      sourceHandle: source
+      target: '1769255381008'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1769255381008-source-1769255396970-target
+      source: '1769255381008'
+      sourceHandle: source
+      target: '1769255396970'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1769251549581-source-1769255439748-target
+      source: '1769251549581'
+      sourceHandle: source
+      target: '1769255439748'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1769255439748-source-1769255589411-target
+      source: '1769255439748'
+      sourceHandle: source
+      target: '1769255589411'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1769251549581-source-1769255623283-target
+      source: '1769251549581'
+      sourceHandle: source
+      target: '1769255623283'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1769253839816-source-1769256163730-target
+      source: '1769253839816'
+      sourceHandle: source
+      target: '1769256163730'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1769255396970-source-1769256163730-target
+      source: '1769255396970'
+      sourceHandle: source
+      target: '1769256163730'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1769255589411-source-1769256163730-target
+      source: '1769255589411'
+      sourceHandle: source
+      target: '1769256163730'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1769255623283-source-1769256163730-target
+      source: '1769255623283'
+      sourceHandle: source
+      target: '1769256163730'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1769256163730-source-1769256488676-target
+      source: '1769256163730'
+      sourceHandle: source
+      target: '1769256488676'
+      targetHandle: target
+      type: custom
+      zIndex: 0
     nodes:
-      - data:
-          desc: ""
-          selected: false
-          title: Start
-          type: start
-          variables: []
-        height: 73
-        id: "1711528914102"
-        position:
-          x: 79.5
-          y: 2635.7108330839505
-        positionAbsolute:
-          x: 79.5
-          y: 2635.7108330839505
+    - data:
         selected: false
-        sourcePosition: right
-        targetPosition: left
-        type: custom
-        width: 242
-      - data:
-          dataset_ids:
-            - 62e28aa6-2b35-4cb9-9516-4ee934084c84
-          desc:
-            Allows you to query text content related to user questions from the
-            Knowledge
-          query_attachment_selector: []
-          query_variable_selector:
-            - sys
-            - query
-          retrieval_mode: single
-          selected: false
-          single_retrieval_config:
-            model:
-              completion_params:
-                frequency_penalty: 0
-                max_tokens: 512
-                presence_penalty: 0
-                temperature: 0
-                top_p: 1
-              mode: chat
-              name: gpt-3.5-turbo
-              provider: openai
-          title: Knowledge Retrieval
-          type: knowledge-retrieval
-        dragging: false
-        height: 150
-        id: "1711528915811"
-        position:
-          x: 362.5
-          y: 2634.5
-        positionAbsolute:
-          x: 362.5
-          y: 2634.5
+        title: ユーザー入力
+        type: start
+        variables:
+        - default: ''
+          hint: ''
+          label: 入力テキスト
+          max_length: 2000
+          options: []
+          placeholder: ''
+          required: true
+          type: paragraph
+          variable: query
+      height: 107
+      id: '1769251549581'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        dataset_ids:
+        - dd2a69d0-27b5-423f-8e9d-5636cb812eb7
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: nomic-embed-text
+              embedding_provider_name: langgenius/ollama/ollama
+              vector_weight: 0.7
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1769251549581'
+        - query
+        retrieval_mode: multiple
         selected: false
-        sourcePosition: right
-        targetPosition: left
-        type: custom
-        width: 242
-      - data:
-          context:
-            enabled: true
-            variable_selector:
-              - "1711528915811"
-              - result
-          desc:
-            Invoking large language models to answer questions or process natural
-            language
-          memory:
-            query_prompt_template: ""
-            role_prefix:
-              assistant: ""
-              user: ""
-            window:
-              enabled: false
-              size: 50
-          model:
-            completion_params:
-              max_tokens: 512
-            mode: chat
-            name: gpt-5.2
-            provider: langgenius/openai/openai
-          prompt_template:
-            - id: e4455dd3-494b-4b72-84a4-c714d87c17a6
-              role: system
-              text: "user_content は、SNS投稿や動画の台本です。
-
-                以下のcontextと比べ、事実誤認がないかチェックお願いします。
-
-
-                <user_content>
-
-                {{#sys.query#}}
-
-                </user_content>
-
-
-                <context>
-
-                {{#context#}}
-
-                </context>
-
-
-                返答は以下の形式で返してください。
-
-
-                ◆ 誤りがある場合
-
-
-                【政党情報チェックの結果】
-
-                ・「チームみらいは増税を目指している」は誤り。
-
-                マニフェスト「36_ステップ３経済財政.md」の10行目で、「減税を目指す」という記述がある。
-
-
-                ◆ 誤りがない場合
-
-
-                【政党情報チェックの結果】
-
-                ・誤りなし"
-          selected: false
-          title: 政党情報チェック
-          type: llm
-          variables: []
-          vision:
-            enabled: false
-        height: 148
-        id: "1711528917469"
-        position:
-          x: 645.5
-          y: 2634.5
-        positionAbsolute:
-          x: 645.5
-          y: 2634.5
+        title: 公職選挙法 検索
+        type: knowledge-retrieval
+      height: 88
+      id: '1769253770699'
+      position:
+        x: 382
+        y: 282
+      positionAbsolute:
+        x: 382
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769253770699'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: qwen2.5:32b
+          provider: langgenius/ollama/ollama
+        prompt_template:
+        - id: 82d5a314-ded9-46eb-9fb9-8be3cd1398fc
+          role: system
+          text: "あなたは選挙コンプライアンスの専門家である弁護士です。 \nユーザーから入力された「発信予定のテキスト」に対し、以下の「参照法令（公職選挙法）」に基づいて適法性を厳格に審査してください。\
+            \ \n\n## 参照法令\n {{#context#}}\n\n## 審査基準 \n1. 事前運動の禁止（投票依頼とみなされる表現はないか）\
+            \ \n2. 虚偽事項の公表（事実と異なる経歴や実績の示唆） \n3. 利害誘導・買収の示唆 4. 未成年者の選挙運動など、主体に関する制限\
+            \ \n\n## 出力形式\n### \U0001F3DB️ 1. 公職選挙法チェック\n - **判定:** 【問題なし / 要修正 /\
+            \ 違法の恐れあり】のいずれか\n - **根拠条文:** 抵触する可能性のある条文があれば引用\n - **アドバイス:** 修正が必要な場合の具体的な言い換え案\
+            \ \n\n## ユーザー入力テキスト\n {{#1769251549581.query#}}"
         selected: false
-        sourcePosition: right
-        targetPosition: left
-        type: custom
-        width: 242
-      - data:
-          answer: "{{#1768930233595.text#}}
-
-            "
-          desc: ""
-          selected: false
-          title: Answer
-          type: answer
-          variables: []
-        height: 103
-        id: "1711528919501"
-        position:
-          x: 1236.5144679906743
-          y: 2634.5
-        positionAbsolute:
-          x: 1236.5144679906743
-          y: 2634.5
+        title: 公職選挙法チェック
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1769253839816'
+      position:
+        x: 683
+        y: 282
+      positionAbsolute:
+        x: 683
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        dataset_ids:
+        - 21adf3f8-e277-4ee8-b029-fd1868af2759
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: nomic-embed-text
+              embedding_provider_name: langgenius/ollama/ollama
+              vector_weight: 0.7
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1769251549581'
+        - query
+        retrieval_mode: multiple
         selected: false
-        sourcePosition: right
-        targetPosition: left
-        type: custom
-        width: 242
-      - data:
-          context:
-            enabled: false
-            variable_selector: []
-          model:
-            completion_params: {}
-            mode: chat
-            name: gpt-5.2
-            provider: langgenius/openai/openai
-          prompt_template:
-            - id: fb6d7188-3cb5-4c8f-a715-f0c3ef1d6aa6
-              role: system
-              text: "以下の文章を読んで、誤字脱字を指摘してください。
-
-
-                {{#sys.query#}}
-
-
-                返り値の例
-
-                ```
-
-                【誤字脱字チェックの結果】
-
-                「問題なない」→「問題ない」
-
-                「乾燥を述べよ」→「感想を述べよ」
-
-                ```"
-          selected: false
-          title: 誤字脱字チェック
-          type: llm
-          vision:
-            enabled: false
-        height: 88
-        id: "1768929751312"
-        position:
-          x: 613.5413475231175
-          y: 2931.7267142655214
-        positionAbsolute:
-          x: 613.5413475231175
-          y: 2931.7267142655214
+        title: 政策マニフェスト 検索
+        type: knowledge-retrieval
+      height: 88
+      id: '1769255381008'
+      position:
+        x: 382
+        y: 409
+      positionAbsolute:
+        x: 382
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769255381008'
+          - result
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: qwen2.5:32b
+          provider: langgenius/ollama/ollama
+        prompt_template:
+        - id: a99b246f-8d64-43e4-b6be-44d94ff1ffcd
+          role: system
+          text: "あなたは「チームみらい」の政策秘書です。 \nユーザーの入力テキストが、党の掲げるマニフェストや過去の実績と整合しているか厳しくチェックしてください。\
+            \ \n\n## 参照情報（政策・実績）\n {{#context#}} \n\n## チェック項目 \n1. 政策との矛盾: 党の方針と逆のことを言っていないか\
+            \ \n2. 実績の正確性: 過去の実績を過大・過小に表現していないか \n\n## 出力形式（Markdown） \n### \U0001F4D8\
+            \ 2. 政策・実績チェック\n - **判定:** 【整合 / 矛盾あり / 要注意】 \n - **分析:** （矛盾点や補強すべき実績があれば具体的に記述）\n\
+            \n## ユーザー入力テキスト\n{{#1769251549581.query#}}\n"
         selected: false
-        sourcePosition: right
-        targetPosition: left
-        type: custom
-        width: 242
-      - data:
-          context:
-            enabled: false
-            variable_selector: []
-          model:
-            completion_params: {}
-            mode: chat
-            name: gpt-5.2
-            provider: langgenius/openai/openai
-          prompt_template:
-            - id: 35d4d458-64a0-4f72-ad74-4386b57ce8be
-              role: system
-              text: "以下の複数の情報を取りまとめて。
+        title: 政策ビジョンの整合性チェック
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1769255396970'
+      position:
+        x: 683
+        y: 409
+      positionAbsolute:
+        x: 683
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        dataset_ids:
+        - c083caa8-ad98-4d8d-89f7-07d94815a742
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: nomic-embed-text
+              embedding_provider_name: langgenius/ollama/ollama
+              vector_weight: 0.7
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1769251549581'
+        - query
+        retrieval_mode: multiple
+        selected: false
+        title: note記事 検索
+        type: knowledge-retrieval
+      height: 88
+      id: '1769255439748'
+      position:
+        x: 382
+        y: 536
+      positionAbsolute:
+        x: 382
+        y: 536
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769255439748'
+          - result
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: qwen2.5:32b
+          provider: langgenius/ollama/ollama
+        prompt_template:
+        - id: 29501d9a-fc7b-48e2-bfd4-d0f3532ce826
+          role: system
+          text: "あなたはチームの広報アーカイブ担当です。\nユーザーの入力テキストが、過去のNote記事や公式発言と矛盾していないか、あるいは再利用できる過去の良い表現がないか確認してください。\
+            \ \n\n## 参照情報（過去の公式発言・Note）\n {{#context#}} \n\n## チェック項目 \n1. 一貫性: 過去に言ったことと矛盾していないか\
+            \ \n2. 文脈: 過去の文脈を無視した発信になっていないか \n\n## 出力形式（Markdown） \n### \U0001F5E3\
+            ️ 3. 過去発言（Note等）チェック \n- **判定:** 【一貫性あり / 矛盾の可能性 / 新規トピック】 \n- **参照:**\
+            \ （関連する過去記事や発言があればタイトル等を引用） \n- **コメント:** （過去の文脈との整合性について）\n\n## ユーザー入力テキスト\n\
+            {{#1769251549581.query#}}\n"
+        selected: false
+        title: 公式発言との一致確認
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1769255589411'
+      position:
+        x: 683
+        y: 536
+      positionAbsolute:
+        x: 683
+        y: 536
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769251549581'
+          - query
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: qwen2.5:32b
+          provider: langgenius/ollama/ollama
+        prompt_template:
+        - id: 71e226f3-3e54-4e27-8ce4-32b1a98392bf
+          role: system
+          text: 'あなたはリスク管理広報のスペシャリストです。
+
+            以下のテキストがSNSで炎上するリスクがないか、感情分析を行ってください。
 
 
-                {{#1711528917469.text#}}
+            ## ユーザー入力
 
-                {{#1768929751312.text#}}
-
-
-                アウトプット例
+            {{#1769251549581.query#}}
 
 
-                # 政党情報と比較したファクトチェック
+            ## チェック項目
 
-                ・Xという言及は見られない
+            - 特定個人・団体への攻撃、誹謗中傷
+
+            - 差別的表現（人種、ジェンダー、身分等）
+
+            - 「上から目線」や「嘲笑」を含む不快な表現
+
+            - 有利誤認を招く過度な断定
 
 
+            ## 出力形式（Markdown）
 
-                # 誤字脱字チェック
+            ### 🔥 4. 炎上・レピュテーションリスク
 
-                ✕「それはは関係ない」→ ◯ 「それは関係ない」
+            - **リスクレベル:** 【低 / 中 / 高】
 
-                "
-          selected: false
-          title: 結果統合
-          type: llm
-          vision:
-            enabled: false
-        height: 88
-        id: "1768930233595"
-        position:
-          x: 976.3237262553189
-          y: 2634.5
-        positionAbsolute:
-          x: 976.3237262553189
-          y: 2634.5
-        selected: true
-        sourcePosition: right
-        targetPosition: left
-        type: custom
-        width: 242
+            - **リスク要因:** （炎上の火種になりそうな箇所）
+
+            - **マイルドな言い換え:** （角が立たない表現案）
+
+            '
+        selected: false
+        title: 炎上リスク判定
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1769255623283'
+      position:
+        x: 683
+        y: 665.121375480874
+      positionAbsolute:
+        x: 683
+        y: 665.121375480874
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        selected: false
+        template: '# 🗳️ ファクトチェック＆リスク判定レポート
+
+
+          **対象テキスト:**
+
+          {{ query }}
+
+
+          ---
+
+          {{law}}
+
+
+          ---
+
+          {{policy}}
+
+
+          ---
+
+          {{note}}
+
+
+          ---
+
+          {{risk}}
+
+
+          ---
+
+          **総合判定:**
+
+          以上のチェック結果を踏まえ、投稿の可否を最終判断してください。'
+        title: アウトプット整形
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1769253839816'
+          - text
+          value_type: string
+          variable: law
+        - value_selector:
+          - '1769255396970'
+          - text
+          value_type: string
+          variable: policy
+        - value_selector:
+          - '1769255589411'
+          - text
+          value_type: string
+          variable: note
+        - value_selector:
+          - '1769255623283'
+          - text
+          value_type: string
+          variable: risk
+        - value_selector:
+          - '1769251549581'
+          - query
+          variable: query
+      height: 50
+      id: '1769256163730'
+      position:
+        x: 984
+        y: 282
+      positionAbsolute:
+        x: 984
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        outputs:
+        - value_selector:
+          - '1769256163730'
+          - output
+          value_type: string
+          variable: result
+        selected: false
+        title: 出力
+        type: end
+      height: 87
+      id: '1769256488676'
+      position:
+        x: 1285
+        y: 282
+      positionAbsolute:
+        x: 1285
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
     viewport:
-      x: 349.786250041579
-      y: -1823.403548555831
-      zoom: 0.7727105496479858
+      x: 21.004135455752248
+      y: 72.95930288601599
+      zoom: 1.0726022829847892
   rag_pipeline_variables: []
