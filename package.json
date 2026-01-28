@@ -15,6 +15,7 @@
     "dify:import": "tsx scripts/dify-cli.ts import",
     "dify:logout": "tsx scripts/dify-cli.ts logout",
     "fetch:note-articles": "tsx scripts/fetch-note-articles.ts",
+    "fetch:manifesto": "tsx scripts/fetch-manifesto.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "INTEGRATION_TEST=true vitest run",

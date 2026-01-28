@@ -56,6 +56,11 @@ npm run dify:logout
 # note.comから記事を取得してknowledges/note/に保存
 npm run fetch:note-articles <username>
 # 例: npm run fetch:note-articles team_mirai_jp
+
+# team-mirai/manifesto-body からマニフェストを取得してknowledges/manifesto/に保存
+npm run fetch:manifesto
+# ドライラン（実際には保存しない）
+npm run fetch:manifesto -- --dry-run
 ```
 ## ローカルLLMを使った動作確認
 
