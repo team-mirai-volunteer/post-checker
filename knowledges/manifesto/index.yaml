@@ -1,0 +1,42 @@
+source:
+  owner: team-mirai
+  repo: manifesto-body
+  branch: shugiin-2026
+  fetchedAt: 2026-01-27T14:33:32.779Z
+files:
+  - filename: 00_チームみらいのビジョン.md
+    sha: 6b89c6c4548265efb2d7fb3952048198422ac899
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/00_%E3%83%81%E3%83%BC%E3%83%A0%E3%81%BF%E3%82%89%E3%81%84%E3%81%AE%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3.md
+  - filename: 01_教育.md
+    sha: 3d09691cf950f6aa760fdc152e463af2e4d66965
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/01_%E6%95%99%E8%82%B2.md
+  - filename: 02_子育て.md
+    sha: 3352f741975800832a7e9989c649c13c093b94d5
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/02_%E5%AD%90%E8%82%B2%E3%81%A6.md
+  - filename: 03_科学技術.md
+    sha: c04b0b0c84542b36f43fd24c5c829a5c7649d208
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/03_%E7%A7%91%E5%AD%A6%E6%8A%80%E8%A1%93.md
+  - filename: 04_産業.md
+    sha: 60081b336651ae55543677629569b5ef55fba272
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/04_%E7%94%A3%E6%A5%AD.md
+  - filename: 05_エネルギー.md
+    sha: fb0447c66ffd35aa76f37b40b1b848060ace0977
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/05_%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC.md
+  - filename: 06_経済財政.md
+    sha: d01f30926ccaba083db2a2a5fe7e99523a8f886e
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/06_%E7%B5%8C%E6%B8%88%E8%B2%A1%E6%94%BF.md
+  - filename: 07_医療.md
+    sha: 5df558935a3eeca9fa32a2eda265d482acf46196
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/07_%E5%8C%BB%E7%99%82.md
+  - filename: 08_福祉.md
+    sha: 286ff13f22af2d39edcd0febcfaf14e6e3954f71
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/08_%E7%A6%8F%E7%A5%89.md
+  - filename: 09_くらしと行政.md
+    sha: d25663bc3a66b7f9765c5f9e11c65ac760ba1ee2
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/09_%E3%81%8F%E3%82%89%E3%81%97%E3%81%A8%E8%A1%8C%E6%94%BF.md
+  - filename: 10_デジタル民主主義.md
+    sha: 588e8de62dc2bed060b63484d5d5cedabc7e0ce7
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/10_%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E6%B0%91%E4%B8%BB%E4%B8%BB%E7%BE%A9.md
+  - filename: 11_国政のその他重要分野.md
+    sha: d4f56507b08a823a239e2c8be8d632d56d4b3b20
+    url: https://github.com/team-mirai/manifesto-body/blob/shugiin-2026/11_%E5%9B%BD%E6%94%BF%E3%81%AE%E3%81%9D%E3%81%AE%E4%BB%96%E9%87%8D%E8%A6%81%E5%88%86%E9%87%8E.md
