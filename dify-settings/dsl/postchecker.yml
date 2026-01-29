@@ -1,21 +1,38 @@
 app:
-  description: ''
+  description: "チームみらいとして投稿を検討しているする内容について、
+
+    ・政策マニフェストとの矛盾
+
+    ・公式noteとの矛盾
+
+    ・公職選挙法違反
+
+    ・一般的な炎上リスク
+
+    ・誤字脱字
+
+
+    を検索するツールです。
+
+    LLMを利用しているため、正確性は必ずしも保証されません。検討時の補助として利用するにとどめてください。
+
+    必ず定められた適切なフローに則って公開判断を行ってください。"
   icon: 🤖
-  icon_background: '#FFEAD5'
+  icon_background: "#D3F8DF"
   mode: workflow
-  name: PostChecker
+  name: みらい投稿チェッカー
   use_icon_as_answer_icon: false
 dependencies:
-- current_identifier: null
-  type: marketplace
-  value:
-    marketplace_plugin_unique_identifier: langgenius/ollama:0.1.2@fcf107badccaf57948634ad2c557d393c3894138d83f4eb3f959e9a1d3a86512
-    version: null
-- current_identifier: null
-  type: marketplace
-  value:
-    marketplace_plugin_unique_identifier: langgenius/openrouter:0.0.30@5b8912ffd2b9b26fe5e12e1dd9891f9a8626b2309b0a88e1f5420b6b359cdfc7
-    version: null
+  - current_identifier: null
+    type: marketplace
+    value:
+      marketplace_plugin_unique_identifier: langgenius/openai:0.2.8@aae2be0913b8c6f0b80cff58e08d7a8b4c214569b41778413fcaea204561ff16
+      version: null
+  - current_identifier: null
+    type: marketplace
+    value:
+      marketplace_plugin_unique_identifier: langgenius/openrouter:0.0.30@5b8912ffd2b9b26fe5e12e1dd9891f9a8626b2309b0a88e1f5420b6b359cdfc7
+      version: null
 kind: app
 version: 0.5.0
 workflow:
@@ -24,17 +41,17 @@ workflow:
   features:
     file_upload:
       allowed_file_extensions:
-      - .JPG
-      - .JPEG
-      - .PNG
-      - .GIF
-      - .WEBP
-      - .SVG
+        - .JPG
+        - .JPEG
+        - .PNG
+        - .GIF
+        - .WEBP
+        - .SVG
       allowed_file_types:
-      - image
+        - image
       allowed_file_upload_methods:
-      - local_file
-      - remote_url
+        - local_file
+        - remote_url
       enabled: false
       fileUploadConfig:
         attachment_image_file_size_limit: 2
@@ -51,10 +68,10 @@ workflow:
         enabled: false
         number_limits: 3
         transfer_methods:
-        - local_file
-        - remote_url
+          - local_file
+          - remote_url
       number_limits: 3
-    opening_statement: ''
+    opening_statement: ""
     retriever_resource:
       enabled: true
     sensitive_word_avoidance:
@@ -66,785 +83,1210 @@ workflow:
       enabled: false
     text_to_speech:
       enabled: false
-      language: ''
-      voice: ''
+      language: ""
+      voice: ""
   graph:
     edges:
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: start
-        targetType: knowledge-retrieval
-      id: 1769251549581-source-1769253770699-target
-      source: '1769251549581'
-      sourceHandle: source
-      target: '1769253770699'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: knowledge-retrieval
-        targetType: llm
-      id: 1769253770699-source-1769253839816-target
-      source: '1769253770699'
-      sourceHandle: source
-      target: '1769253839816'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: start
-        targetType: knowledge-retrieval
-      id: 1769251549581-source-1769255381008-target
-      source: '1769251549581'
-      sourceHandle: source
-      target: '1769255381008'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: knowledge-retrieval
-        targetType: llm
-      id: 1769255381008-source-1769255396970-target
-      source: '1769255381008'
-      sourceHandle: source
-      target: '1769255396970'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: start
-        targetType: knowledge-retrieval
-      id: 1769251549581-source-1769255439748-target
-      source: '1769251549581'
-      sourceHandle: source
-      target: '1769255439748'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: knowledge-retrieval
-        targetType: llm
-      id: 1769255439748-source-1769255589411-target
-      selected: false
-      source: '1769255439748'
-      sourceHandle: source
-      target: '1769255589411'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: start
-        targetType: llm
-      id: 1769251549581-source-1769255623283-target
-      source: '1769251549581'
-      sourceHandle: source
-      target: '1769255623283'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: 1769253839816-source-1769256163730-target
-      source: '1769253839816'
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: 1769255396970-source-1769256163730-target
-      source: '1769255396970'
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: 1769255589411-source-1769256163730-target
-      selected: false
-      source: '1769255589411'
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: 1769255623283-source-1769256163730-target
-      source: '1769255623283'
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: 1769264824818-source-1769264927152-target
-      selected: false
-      source: '1769264824818'
-      sourceHandle: source
-      target: '1769264927152'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: template-transform
-        targetType: template-transform
-      id: 1769256163730-source-1769264927152-target
-      selected: false
-      source: '1769256163730'
-      sourceHandle: source
-      target: '1769264927152'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: template-transform
-        targetType: end
-      id: 1769264927152-source-1769265182872-target
-      selected: false
-      source: '1769264927152'
-      sourceHandle: source
-      target: '1769265182872'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: 1769253839816-source-1769264824818-target
-      source: '1769253839816'
-      sourceHandle: source
-      target: '1769264824818'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: 1769255396970-source-1769264824818-target
-      source: '1769255396970'
-      sourceHandle: source
-      target: '1769264824818'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: 1769255589411-source-1769264824818-target
-      selected: false
-      source: '1769255589411'
-      sourceHandle: source
-      target: '1769264824818'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: 1769255623283-source-1769264824818-target
-      source: '1769255623283'
-      sourceHandle: source
-      target: '1769264824818'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: start
-        targetType: code
-      id: 1769251549581-source-1769337089985-target
-      source: '1769251549581'
-      sourceHandle: source
-      target: '1769337089985'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: code
-        targetType: llm
-      id: 1769337089985-source-1769253839816-target
-      source: '1769337089985'
-      sourceHandle: source
-      target: '1769253839816'
-      targetHandle: target
-      type: custom
-      zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: start
+          targetType: knowledge-retrieval
+        id: 1769251549581-source-1769255381008-target
+        source: "1769251549581"
+        sourceHandle: source
+        target: "1769255381008"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: knowledge-retrieval
+          targetType: llm
+        id: 1769255381008-source-1769255396970-target
+        source: "1769255381008"
+        sourceHandle: source
+        target: "1769255396970"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: start
+          targetType: knowledge-retrieval
+        id: 1769251549581-source-1769255439748-target
+        source: "1769251549581"
+        sourceHandle: source
+        target: "1769255439748"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: knowledge-retrieval
+          targetType: llm
+        id: 1769255439748-source-1769255589411-target
+        selected: false
+        source: "1769255439748"
+        sourceHandle: source
+        target: "1769255589411"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: start
+          targetType: llm
+        id: 1769251549581-source-1769255623283-target
+        source: "1769251549581"
+        sourceHandle: source
+        target: "1769255623283"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: 1769255396970-source-1769256163730-target
+        source: "1769255396970"
+        sourceHandle: source
+        target: "1769256163730"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: 1769255589411-source-1769256163730-target
+        selected: false
+        source: "1769255589411"
+        sourceHandle: source
+        target: "1769256163730"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: 1769255623283-source-1769256163730-target
+        source: "1769255623283"
+        sourceHandle: source
+        target: "1769256163730"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: 1769264824818-source-1769264927152-target
+        selected: false
+        source: "1769264824818"
+        sourceHandle: source
+        target: "1769264927152"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: template-transform
+          targetType: template-transform
+        id: 1769256163730-source-1769264927152-target
+        selected: false
+        source: "1769256163730"
+        sourceHandle: source
+        target: "1769264927152"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: template-transform
+          targetType: end
+        id: 1769264927152-source-1769265182872-target
+        selected: false
+        source: "1769264927152"
+        sourceHandle: source
+        target: "1769265182872"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: llm
+        id: 1769255396970-source-1769264824818-target
+        source: "1769255396970"
+        sourceHandle: source
+        target: "1769264824818"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: llm
+        id: 1769255589411-source-1769264824818-target
+        selected: false
+        source: "1769255589411"
+        sourceHandle: source
+        target: "1769264824818"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: llm
+        id: 1769255623283-source-1769264824818-target
+        source: "1769255623283"
+        sourceHandle: source
+        target: "1769264824818"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: start
+          targetType: code
+        id: 1769251549581-source-1769337089985-target
+        source: "1769251549581"
+        sourceHandle: source
+        target: "1769337089985"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: code
+          targetType: if-else
+        id: 1769337089985-source-condition-branch-target
+        source: "1769337089985"
+        sourceHandle: source
+        target: condition-branch-node
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: if-else
+          targetType: llm
+        id: condition-branch-pre-election
+        source: condition-branch-node
+        sourceHandle: pre-election-case
+        target: llm-pre-election
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: if-else
+          targetType: llm
+        id: condition-branch-election-start
+        source: condition-branch-node
+        sourceHandle: election-start-case
+        target: llm-election-start
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: if-else
+          targetType: llm
+        id: condition-branch-election-period
+        source: condition-branch-node
+        sourceHandle: else
+        target: llm-election-period
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: if-else
+          targetType: llm
+        id: condition-branch-node-false-llm-election-period-target
+        source: condition-branch-node
+        sourceHandle: "false"
+        target: llm-election-period
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: llm-pre-election-source-17696512572430-target
+        source: llm-pre-election
+        sourceHandle: source
+        target: "17696512572430"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: llm-election-period-source-17696512572430-target
+        source: llm-election-period
+        sourceHandle: source
+        target: "17696512572430"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: llm-election-start-source-17696512572430-target
+        source: llm-election-start
+        sourceHandle: source
+        target: "17696512572430"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: template-transform
+          targetType: llm
+        id: 17696512572430-source-1769264824818-target
+        source: "17696512572430"
+        sourceHandle: source
+        target: "1769264824818"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: template-transform
+          targetType: template-transform
+        id: 17696512572430-source-1769256163730-target
+        source: "17696512572430"
+        sourceHandle: source
+        target: "1769256163730"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInIteration: false
+          isInLoop: false
+          sourceType: start
+          targetType: llm
+        id: 1769251549581-source-1769255623284-target
+        source: "1769251549581"
+        sourceHandle: source
+        target: "1769255623284"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: template-transform
+        id: 1769255623284-source-1769256163730-target
+        source: "1769255623284"
+        sourceHandle: source
+        target: "1769256163730"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+      - data:
+          isInLoop: false
+          sourceType: llm
+          targetType: llm
+        id: 1769255623284-source-1769264824818-target
+        source: "1769255623284"
+        sourceHandle: source
+        target: "1769264824818"
+        targetHandle: target
+        type: custom
+        zIndex: 0
     nodes:
-    - data:
+      - data:
+          selected: false
+          title: ユーザー入力
+          type: start
+          variables:
+            - default: ""
+              hint: ""
+              label: 入力テキスト
+              max_length: 30000
+              options: []
+              placeholder: ""
+              required: true
+              type: paragraph
+              variable: query
+        height: 109
+        id: "1769251549581"
+        position:
+          x: -324.7877192240611
+          y: 208.90755509917255
+        positionAbsolute:
+          x: -324.7877192240611
+          y: 208.90755509917255
+        selected: true
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          dataset_ids:
+            - afRC3rHZuthJ1AHNi4z0+ywF4+BWjpep8Oxd6WyOpd67xPs/h/V+eLrZnp26nRRx
+          multiple_retrieval_config:
+            reranking_enable: false
+            reranking_mode: weighted_score
+            top_k: 4
+            weights:
+              keyword_setting:
+                keyword_weight: 0.3
+              vector_setting:
+                embedding_model_name: text-embedding-3-large
+                embedding_provider_name: langgenius/openai/openai
+                vector_weight: 0.7
+              weight_type: customized
+          query_attachment_selector: []
+          query_variable_selector:
+            - "1769251549581"
+            - query
+          retrieval_mode: multiple
+          selected: false
+          title: 政策マニフェスト 検索
+          type: knowledge-retrieval
+        height: 90
+        id: "1769255381008"
+        position:
+          x: 382
+          y: 409
+        positionAbsolute:
+          x: 382
+          y: 409
         selected: false
-        title: ユーザー入力
-        type: start
-        variables:
-        - default: ''
-          hint: ''
-          label: 入力テキスト
-          max_length: 30000
-          options: []
-          placeholder: ''
-          required: true
-          type: paragraph
-          variable: query
-      height: 107
-      id: '1769251549581'
-      position:
-        x: -47.33405484449628
-        y: 276.2771211305844
-      positionAbsolute:
-        x: -47.33405484449628
-        y: 276.2771211305844
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        dataset_ids:
-        - dd2a69d0-27b5-423f-8e9d-5636cb812eb7
-        multiple_retrieval_config:
-          reranking_enable: false
-          reranking_mode: weighted_score
-          top_k: 4
-          weights:
-            keyword_setting:
-              keyword_weight: 0.3
-            vector_setting:
-              embedding_model_name: nomic-embed-text
-              embedding_provider_name: langgenius/ollama/ollama
-              vector_weight: 0.7
-            weight_type: customized
-        query_attachment_selector: []
-        query_variable_selector:
-        - '1769251549581'
-        - query
-        retrieval_mode: multiple
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: true
+            variable_selector:
+              - "1769255381008"
+              - result
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: a99b246f-8d64-43e4-b6be-44d94ff1ffcd
+              role: system
+              text:
+                "あなたは「チームみらい」の政策秘書です。 \nユーザーの入力テキストが、党の掲げるマニフェストや過去の実績と整合しているか厳しくチェックしてください。\
+                \ \n\n## 参照情報（政策・実績）\n {{#context#}} \n\n## チェック項目 \n1. 政策との矛盾: 党の方針と逆のことを言っていないか\
+                \ \n2. 実績の正確性: 過去の実績を過大・過小に表現していないか \n\n※ 政策に触れていない内容については整合としてください。\n\
+                \n## 出力形式（Markdown） \n### \U0001F4D8 2. 政策マニフェストとの矛盾チェック\n - **判定:** 【✅整合\
+                \ / ⚠️矛盾あり】 \n - **分析:** （矛盾点や補強すべき実績があれば具体的に記述）\n\n## ユーザー入力テキスト\n{{#1769251549581.query#}}\n"
+          selected: false
+          title: 政策ビジョンの整合性チェック
+          type: llm
+          vision:
+            enabled: false
+        height: 88
+        id: "1769255396970"
+        position:
+          x: 683
+          y: 409
+        positionAbsolute:
+          x: 683
+          y: 409
         selected: false
-        title: 公職選挙法 検索
-        type: knowledge-retrieval
-      height: 88
-      id: '1769253770699'
-      position:
-        x: 382
-        y: 282
-      positionAbsolute:
-        x: 382
-        y: 282
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1769253770699'
-          - result
-        desc: ''
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: openai/gpt-4o-mini
-          provider: langgenius/openrouter/openrouter
-        prompt_template:
-        - id: 82d5a314-ded9-46eb-9fb9-8be3cd1398fc
-          role: system
-          text: "あなたは選挙コンプライアンスの専門家である弁護士です。 \nユーザーから入力された「発信予定のテキスト」に対し、以下の「参照法令（公職選挙法）」に基づいて適法性を厳格に審査してください。\
-            \ \n\n## 参照法令\n {{#context#}}\n\n## \U0001F4C5 現在の日付と法的ステータス\n{{#1769337089985.status_message#}}\n\
-            \n## 審査基準 \n1. 事前運動の禁止（投票依頼とみなされる表現はないか） \n2. 虚偽事項の公表（事実と異なる経歴や実績の示唆）\
-            \ \n3. 利害誘導・買収の示唆 \n4. 未成年者の選挙運動など、主体に関する制限 \n\n## 出力形式\n### \U0001F3DB\
-            ️ 1. 公職選挙法チェック\n - **判定:** 【\U0001F525高リスク/ ⚠️中リスク/ ✅低リスク】 \n - **判断根拠:**\
-            \ 判断理由をわかりやすく説明\n\n## ユーザー入力テキスト\n {{#1769251549581.query#}}"
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          dataset_ids:
+            - G7yTrtG+o8QC9V60ruc21j7LSaKu4TbjQYQ7nj55swzIQeRWBIaTv0A0DLWlcPxn
+          multiple_retrieval_config:
+            reranking_enable: false
+            reranking_mode: weighted_score
+            top_k: 4
+            weights:
+              keyword_setting:
+                keyword_weight: 0.3
+              vector_setting:
+                embedding_model_name: text-embedding-3-large
+                embedding_provider_name: langgenius/openai/openai
+                vector_weight: 0.7
+              weight_type: customized
+          query_attachment_selector: []
+          query_variable_selector:
+            - "1769251549581"
+            - query
+          retrieval_mode: multiple
+          selected: false
+          title: note記事 検索
+          type: knowledge-retrieval
+        height: 90
+        id: "1769255439748"
+        position:
+          x: 382
+          y: 536
+        positionAbsolute:
+          x: 382
+          y: 536
         selected: false
-        title: 公職選挙法チェック
-        type: llm
-        vision:
-          enabled: false
-      height: 86
-      id: '1769253839816'
-      position:
-        x: 683
-        y: 282
-      positionAbsolute:
-        x: 683
-        y: 282
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        dataset_ids:
-        - 21adf3f8-e277-4ee8-b029-fd1868af2759
-        multiple_retrieval_config:
-          reranking_enable: false
-          reranking_mode: weighted_score
-          top_k: 4
-          weights:
-            keyword_setting:
-              keyword_weight: 0.3
-            vector_setting:
-              embedding_model_name: nomic-embed-text
-              embedding_provider_name: langgenius/ollama/ollama
-              vector_weight: 0.7
-            weight_type: customized
-        query_attachment_selector: []
-        query_variable_selector:
-        - '1769251549581'
-        - query
-        retrieval_mode: multiple
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: true
+            variable_selector:
+              - "1769255439748"
+              - result
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: 29501d9a-fc7b-48e2-bfd4-d0f3532ce826
+              role: system
+              text:
+                "あなたはチームの広報アーカイブ担当です。\nユーザーの入力テキストが、過去のNote記事や公式発言と矛盾していないか、あるいは再利用できる過去の良い表現がないか確認してください。\
+                \ \n\n## 参照情報（過去の公式発言・Note）\n {{#context#}} \n\n## チェック項目 \n1. 一貫性: 過去に言ったことと矛盾していないか\
+                \ \n2. 文脈: 過去の文脈を無視した発信になっていないか \n\n## 出力形式（Markdown） \n### \U0001F5E3\
+                ️ 3. 公式noteとの矛盾チェック \n- **判定:** 【✅整合 / ⚠️矛盾あり】\n- **参照:** （関連する過去記事や発言があればタイトル等を引用）\
+                \ \n- **コメント:** （過去の文脈との整合性について）\n\n## ユーザー入力テキスト\n{{#1769251549581.query#}}\n"
+          selected: false
+          title: 公式発言との一致確認
+          type: llm
+          vision:
+            enabled: false
+        height: 88
+        id: "1769255589411"
+        position:
+          x: 683
+          y: 536
+        positionAbsolute:
+          x: 683
+          y: 536
         selected: false
-        title: 政策マニフェスト 検索
-        type: knowledge-retrieval
-      height: 88
-      id: '1769255381008'
-      position:
-        x: 382
-        y: 409
-      positionAbsolute:
-        x: 382
-        y: 409
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1769255381008'
-          - result
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: openai/gpt-4o-mini
-          provider: langgenius/openrouter/openrouter
-        prompt_template:
-        - id: a99b246f-8d64-43e4-b6be-44d94ff1ffcd
-          role: system
-          text: "あなたは「チームみらい」の政策秘書です。 \nユーザーの入力テキストが、党の掲げるマニフェストや過去の実績と整合しているか厳しくチェックしてください。\
-            \ \n\n## 参照情報（政策・実績）\n {{#context#}} \n\n## チェック項目 \n1. 政策との矛盾: 党の方針と逆のことを言っていないか\
-            \ \n2. 実績の正確性: 過去の実績を過大・過小に表現していないか \n\n## 出力形式（Markdown） \n### \U0001F4D8\
-            \ 2. 政策マニフェストとの矛盾チェック\n - **判定:** 【✅整合 / ⚠️矛盾あり】 \n - **分析:** （矛盾点や補強すべき実績があれば具体的に記述）\n\
-            \n## ユーザー入力テキスト\n{{#1769251549581.query#}}\n"
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: true
+            variable_selector:
+              - "1769251549581"
+              - query
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: 71e226f3-3e54-4e27-8ce4-32b1a98392bf
+              role: system
+              text: "あなたはリスク管理広報のスペシャリストです。
+
+                以下のテキストがSNSで炎上するリスクがないか、感情分析を行ってください。
+
+
+                ## ユーザー入力
+
+                {{#1769251549581.query#}}
+
+
+                ## チェック項目
+
+                - 特定個人・団体への攻撃、誹謗中傷
+
+                - 差別的表現（人種、ジェンダー、身分等）
+
+                - 「上から目線」や「嘲笑」を含む不快な表現
+
+                - 有利誤認を招く過度な断定
+
+
+                ## 出力形式（Markdown）
+
+                ### 🔥 4. 炎上・レピュテーションリスク
+
+                - **判定:** 【🔥高リスク/ ⚠️中リスク/ ✅低リスク】
+
+                - **リスク要因:** （明確に炎上の火種になりそうな箇所）
+
+
+                "
+          selected: false
+          title: 炎上リスク判定
+          type: llm
+          vision:
+            enabled: false
+        height: 88
+        id: "1769255623283"
+        position:
+          x: 683
+          y: 665.121375480874
+        positionAbsolute:
+          x: 683
+          y: 665.121375480874
         selected: false
-        title: 政策ビジョンの整合性チェック
-        type: llm
-        vision:
-          enabled: false
-      height: 86
-      id: '1769255396970'
-      position:
-        x: 683
-        y: 409
-      positionAbsolute:
-        x: 683
-        y: 409
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        dataset_ids:
-        - c083caa8-ad98-4d8d-89f7-07d94815a742
-        multiple_retrieval_config:
-          reranking_enable: false
-          reranking_mode: weighted_score
-          top_k: 4
-          weights:
-            keyword_setting:
-              keyword_weight: 0.3
-            vector_setting:
-              embedding_model_name: nomic-embed-text
-              embedding_provider_name: langgenius/ollama/ollama
-              vector_weight: 0.7
-            weight_type: customized
-        query_attachment_selector: []
-        query_variable_selector:
-        - '1769251549581'
-        - query
-        retrieval_mode: multiple
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: false
+            variable_selector: []
+          model:
+            completion_params:
+              temperature: 0.3
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: typo-checker-prompt
+              role: system
+              text:
+                "あなたは日本語の校正・校閲の専門家です。\nユーザーから入力されたテキストに対し、誤字脱字・表記ゆれ・文法ミスをチェックしてください。\n\
+                \n## チェック項目\n1. **誤字**: 漢字の変換ミス、タイプミス\n2. **脱字**: 文字の欠落\n3. **衍字**: 余分な文字の混入\n\
+                4. **表記ゆれ**: 同一文書内での表記の不統一（例: 「行う」と「おこなう」）\n5. **文法ミス**: 助詞の誤り、文のねじれ\n\
+                6. **送り仮名の誤り**: 「行なう」→「行う」など\n7. **固有名詞の誤り**: 下記の正式表記辞書を参照\n\n## チームみらい固有名詞辞書（正式表記）\n\
+                以下の固有名詞は正式表記が決まっています。誤った表記があれば必ず指摘してください。\n\n### 組織名\n- **チームみらい**（政党名）\n\
+                \  - 誤: チーム未来、チーム見来、チームミライ\n\n### 人名（候補者・関係者）\n- **安野たかひろ**（党首）→ 誤: 安野高広、あんの高広、安野孝広、安野隆広\n\
+                - **稲原むねよし** → 誤: 稲原宗義、稲原棟義、稲原宗良\n- **武藤かず子** → 誤: 武藤和子、武藤一子、武藤かずこ\n-\
+                \ **河合みちお** → 誤: 河合道夫、河合通夫、河合美智雄\n- **小林しゅうへい** → 誤: 小林周平、小林秀平、小林修平\n\
+                - **山田えり** → 誤: 山田絵理、山田恵里、山田英里\n- **うさみ登** → 誤: 宇佐美登、うさみのぼる、宇佐見登\n- **高山さとし**\
+                \ → 誤: 高山聡、高山智、高山悟\n- **土橋あきひろ** → 誤: 土橋明広、土橋昭広、土橋章広\n- **みねしま侑也** → 誤:\
+                \ 峰島侑也、峯島侑也、嶺島侑也\n- **須田えいたろう** → 誤: 須田栄太郎、須田英太郎、須田瑛太郎\n- **酒井ゆうすけ** →\
+                \ 誤: 酒井雄介、酒井裕介、酒井祐介\n- **堀場さち子** → 誤: 堀場幸子、堀場佐智子、堀場祥子\n- **山本たけよし** →\
+                \ 誤: 山本武義、山本剛義、山本健義\n- **古川あおい** → 誤: 古川葵、古川碧、古川蒼\n\n### サービス名\n- **みらい議会**\
+                \ → 誤: 未来議会、ミライ議会、みらい議かい\n- **みらいまる見え政治資金** → 誤: 未来まる見え政治資金、ミライまる見え政治資金、みらい丸見え政治資金\n\
+                \n### 政治用語（文脈注意）\n- **党首**（政治の文脈で）→ 誤: 投手、闘手\n\n## 出力形式（Markdown）\n###\
+                \ ✏️ 5. 誤字脱字チェック\n- **判定:** 【⚠️修正箇所あり / ✅問題なし】\n- **指摘箇所:** （誤りがあれば「誤:\
+                \ 〇〇 → 正: △△」の形式でリスト化。見た人がどの箇所のことか分かりやすいよう、一意になるような前後文脈を含める。）\n\n## ユーザー入力テキスト\n\
+                {{#1769251549581.query#}}\n"
+          selected: false
+          title: 誤字脱字チェック
+          type: llm
+          vision:
+            enabled: false
+        height: 88
+        id: "1769255623284"
+        position:
+          x: 683
+          y: 793
+        positionAbsolute:
+          x: 683
+          y: 793
         selected: false
-        title: note記事 検索
-        type: knowledge-retrieval
-      height: 88
-      id: '1769255439748'
-      position:
-        x: 382
-        y: 536
-      positionAbsolute:
-        x: 382
-        y: 536
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1769255439748'
-          - result
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: openai/gpt-4o-mini
-          provider: langgenius/openrouter/openrouter
-        prompt_template:
-        - id: 29501d9a-fc7b-48e2-bfd4-d0f3532ce826
-          role: system
-          text: "あなたはチームの広報アーカイブ担当です。\nユーザーの入力テキストが、過去のNote記事や公式発言と矛盾していないか、あるいは再利用できる過去の良い表現がないか確認してください。\
-            \ \n\n## 参照情報（過去の公式発言・Note）\n {{#context#}} \n\n## チェック項目 \n1. 一貫性: 過去に言ったことと矛盾していないか\
-            \ \n2. 文脈: 過去の文脈を無視した発信になっていないか \n\n## 出力形式（Markdown） \n### \U0001F5E3\
-            ️ 3. 公式noteとの矛盾チェック \n- **判定:** 【✅整合 / ⚠️矛盾あり】\n- **参照:** （関連する過去記事や発言があればタイトル等を引用）\
-            \ \n- **コメント:** （過去の文脈との整合性について）\n\n## ユーザー入力テキスト\n{{#1769251549581.query#}}\n"
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          selected: false
+          template: "---
+
+            {{raw}}
+
+
+            ---
+
+            {{policy}}
+
+
+            ---
+
+            {{note}}
+
+
+            ---
+
+            {{risk}}
+
+
+            ---
+
+            {{typo}}
+
+            "
+          title: チェック内容の集約
+          type: template-transform
+          variables:
+            - value_selector:
+                - "1769255396970"
+                - text
+              value_type: string
+              variable: policy
+            - value_selector:
+                - "1769255589411"
+                - text
+              value_type: string
+              variable: note
+            - value_selector:
+                - "1769255623283"
+                - text
+              value_type: string
+              variable: risk
+            - value_selector:
+                - "1769251549581"
+                - query
+              variable: query
+            - value_selector:
+                - "17696512572430"
+                - output
+              value_type: string
+              variable: raw
+            - value_selector:
+                - "1769255623284"
+                - text
+              value_type: string
+              variable: typo
+        height: 52
+        id: "1769256163730"
+        position:
+          x: 1261.0914149695398
+          y: 34.24595139597072
+        positionAbsolute:
+          x: 1261.0914149695398
+          y: 34.24595139597072
         selected: false
-        title: 公式発言との一致確認
-        type: llm
-        vision:
-          enabled: false
-      height: 86
-      id: '1769255589411'
-      position:
-        x: 683
-        y: 536
-      positionAbsolute:
-        x: 683
-        y: 536
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1769251549581'
-          - query
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: openai/gpt-4o-mini
-          provider: langgenius/openrouter/openrouter
-        prompt_template:
-        - id: 71e226f3-3e54-4e27-8ce4-32b1a98392bf
-          role: system
-          text: 'あなたはリスク管理広報のスペシャリストです。
-
-            以下のテキストがSNSで炎上するリスクがないか、感情分析を行ってください。
-
-
-            ## ユーザー入力
-
-            {{#1769251549581.query#}}
-
-
-            ## チェック項目
-
-            - 特定個人・団体への攻撃、誹謗中傷
-
-            - 差別的表現（人種、ジェンダー、身分等）
-
-            - 「上から目線」や「嘲笑」を含む不快な表現
-
-            - 有利誤認を招く過度な断定
-
-
-            ## 出力形式（Markdown）
-
-            ### 🔥 4. 炎上・レピュテーションリスク
-
-            - **判定:** 【🔥高リスク/ ⚠️中リスク/ ✅低リスク】
-
-            - **リスク要因:** （明確に炎上の火種になりそうな箇所）
-
-
-            '
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: false
+            variable_selector: []
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: gpt-4o-mini
+            provider: langgenius/openai/openai
+          prompt_template:
+            - id: 742fbdbf-42cb-411c-a1e7-87934843ca5f
+              role: system
+              text:
+                "政党「チームみらい」がSNSや記事として発信する内容に対し、多様な観点から自動チェックを行った結果を渡します。\n\n提供された内容を総合的に分析し、総括として、ユーザーに対して分かりやすいフィードバックを行ってください。\
+                \ \nやることは以下のタスクのみとし、修正例の提示は行わないでください。\n\n## 参照するチェック結果\n### 公職選挙法チェック\n\
+                {{#17696512572430.output#}}\n### 政策ビジョンの整合性チェック\n{{#1769255396970.text#}}\n\
+                ### 公式発言との一致確認\n{{#1769255589411.text#}}\n### 炎上リスク判定\n{{#1769255623283.text#}}\n\
+                ### 誤字脱字チェック\n{{#1769255623284.text#}}\n\n## あなたのタスク \n参照するチェック結果をそのままコピペするのではなく、以下の構成で分かりやすく伝えてください。\
+                \ \n\n## 出力形式（Markdown）\n### 重要な指摘事項（要約）\n- 専門家レポートの中で、特に致命的なリスク（公選法違反や炎上リスク）があれば簡潔に指摘。\
+                \ 問題ないことについては言及しない。\n- 些末な指摘は無視して、重要なポイントのみに絞る。 \n\n## 出力例\n```\n- 公職選挙法\
+                \ ✅\n- 政策ビジョンとの一致 \U0001F525\n- 公式発言との一致 ⚠️\n- 炎上リスク ✅\n- 誤字脱字 ⚠️\n\n\
+                - 要約: \n消費税について、政党マニフェストと異なる内容が見られます。確認をおすすめします。\n```"
+          selected: false
+          title: 総括
+          type: llm
+          vision:
+            enabled: false
+        height: 88
+        id: "1769264824818"
+        position:
+          x: 1261.0914149695398
+          y: 354.33811933759114
+        positionAbsolute:
+          x: 1261.0914149695398
+          y: 354.33811933759114
         selected: false
-        title: 炎上リスク判定
-        type: llm
-        vision:
-          enabled: false
-      height: 86
-      id: '1769255623283'
-      position:
-        x: 683
-        y: 665.121375480874
-      positionAbsolute:
-        x: 683
-        y: 665.121375480874
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          selected: false
+          template: "# 🗳️ 事実確認＆リスク判定結果
+
+
+            ### 【重要】このツールは、投稿リスクについてのヒントを与えることが目的です。
+
+            このツールで「問題なし」となっても、即時投稿してよいことを意味しません。
+
+            必ず定められた適切なフローに則って公開判断を行ってください。
+
+            （その際にこのツールの結果を共有、チェックする人・チェックされる人にとって手間が小さくなるかもしれません）
+
+
+            ---
+
+            ## 総括
+
+            ---
+
+            {{ summary }}
+
+
+            ---
+
+            ## 詳細レポート
+
+            {{ output }}
+
+
+            ---
+
+
+            以上のチェック結果を踏まえ、投稿の可否を最終判断してください。
+
+            "
+          title: アウトプット整形
+          type: template-transform
+          variables:
+            - value_selector:
+                - "1769264824818"
+                - text
+              value_type: string
+              variable: summary
+            - value_selector:
+                - "1769256163730"
+                - output
+              value_type: string
+              variable: output
+        height: 52
+        id: "1769264927152"
+        position:
+          x: 1524.5412336253369
+          y: 178.02136651435467
+        positionAbsolute:
+          x: 1524.5412336253369
+          y: 178.02136651435467
         selected: false
-        template: '---
-
-          {{law}}
-
-
-          ---
-
-          {{policy}}
-
-
-          ---
-
-          {{note}}
-
-
-          ---
-
-          {{risk}}
-
-          '
-        title: チェック内容の集約
-        type: template-transform
-        variables:
-        - value_selector:
-          - '1769253839816'
-          - text
-          value_type: string
-          variable: law
-        - value_selector:
-          - '1769255396970'
-          - text
-          value_type: string
-          variable: policy
-        - value_selector:
-          - '1769255589411'
-          - text
-          value_type: string
-          variable: note
-        - value_selector:
-          - '1769255623283'
-          - text
-          value_type: string
-          variable: risk
-        - value_selector:
-          - '1769251549581'
-          - query
-          variable: query
-      height: 50
-      id: '1769256163730'
-      position:
-        x: 1027.8060193286685
-        y: 282
-      positionAbsolute:
-        x: 1027.8060193286685
-        y: 282
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        context:
-          enabled: false
-          variable_selector: []
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: openai/gpt-5.1
-          provider: langgenius/openrouter/openrouter
-        prompt_template:
-        - id: 742fbdbf-42cb-411c-a1e7-87934843ca5f
-          role: system
-          text: "あなたは選挙事務所の「選対本部長」です。 \nユーザー（候補者やスタッフ）が作成したSNS投稿案に対して、各専門家（弁護士、政策秘書、リスク担当など）がチェックを行いました。\n\
-            提供された「専門家レポート（Context）」を総合的に分析し、ユーザーに対して分かりやすいフィードバックを行ってください。 \nやることは以下のタスクのみとし、修正例の提示は行わないでください。\n\
-            \n## 参照する専門家レポート\n### 公職選挙法チェック\n{{#1769253839816.text#}}\n### 政策ビジョンの整合性チェック\n\
-            {{#1769255396970.text#}}\n### 公式発言との一致確認\n{{#1769255589411.text#}}\n###\
-            \ 炎上リスク判定\n{{#1769255623283.text#}}\n\n## あなたのタスク \n専門家の意見をそのままコピペするのではなく、以下の構成で分かりやすく伝えてください。\
-            \ \n\n## 出力形式（Markdown）\n### 重要な指摘事項（要約）\n- **総合判定:** 【\U0001F525重大な懸念あり/\
-            \ ⚠️注意/ ✅低リスク】\n- 専門家レポートの中で、特に致命的なリスク（公選法違反や炎上リスク）があれば簡潔に指摘。 \n- 些末な指摘は無視して、重要なポイントのみに絞る。\
-            \ \n\n"
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          outputs:
+            - value_selector:
+                - "1769264927152"
+                - output
+              value_type: string
+              variable: output
+          selected: false
+          title: 出力
+          type: end
+        height: 88
+        id: "1769265182872"
+        position:
+          x: 1812.2890764037602
+          y: 178.02136651435467
+        positionAbsolute:
+          x: 1812.2890764037602
+          y: 178.02136651435467
         selected: false
-        title: 総括
-        type: llm
-        vision:
-          enabled: false
-      height: 86
-      id: '1769264824818'
-      position:
-        x: 1027.8060193286685
-        y: 392.9968420437926
-      positionAbsolute:
-        x: 1027.8060193286685
-        y: 392.9968420437926
-      selected: true
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          code:
+            "\nfrom datetime import datetime, timedelta, timezone\n\ndef main():\n\
+            \    # 1. 日本時間 (JST) で現在日時を取得\n    JST = timezone(timedelta(hours=9))\n\
+            \    now = datetime.now(JST)\n    today = now.date()\n    \n    # ==========================================\n\
+            \    # ★ここに「公示日」を設定してください (年, 月, 日)\n    ANNOUNCEMENT_DATE = datetime(2026,\
+            \ 1, 27, tzinfo=JST).date()\n    # ==========================================\n\
+            \n    # 3. 日付比較ロジック\n    diff = (ANNOUNCEMENT_DATE - today).days\n    \n\
+            \    if diff > 0:\n        # 公示日前（事前運動期間）\n        period_type = \"PRE_ELECTION\"\
+            \n    elif diff == 0:\n        # 公示日当日\n        period_type = \"ELECTION_START_DAY\"\
+            \n    else:\n        # 選挙期間中（公示日以降）\n        period_type = \"ELECTION_PERIOD\"\
+            \n\n    # 4. 結果を返す\n    return {\n        \"today\": str(today),\n     \
+            \   \"announcement_date\": str(ANNOUNCEMENT_DATE),\n        \"period_type\"\
+            : period_type\n    }\n"
+          code_language: python3
+          outputs:
+            announcement_date:
+              children: null
+              type: string
+            period_type:
+              children: null
+              type: string
+            today:
+              children: null
+              type: string
+          selected: false
+          title: 当日日付と公示日の比較
+          type: code
+          variables: []
+        height: 52
+        id: "1769337089985"
+        position:
+          x: 53.154578843688
+          y: -105.52057767934593
+        positionAbsolute:
+          x: 53.154578843688
+          y: -105.52057767934593
         selected: false
-        template: '# 🗳️ ファクトチェック＆リスク判定
-
-          ---
-
-          ## 総括
-
-          ---
-
-          {{ summary }}
-
-
-          ---
-
-          ## 詳細レポート
-
-          {{ output }}
-
-
-          ---
-
-
-          以上のチェック結果を踏まえ、投稿の可否を最終判断してください。
-
-          '
-        title: アウトプット整形
-        type: template-transform
-        variables:
-        - value_selector:
-          - '1769264824818'
-          - text
-          value_type: string
-          variable: summary
-        - value_selector:
-          - '1769256163730'
-          - output
-          value_type: string
-          variable: output
-      height: 50
-      id: '1769264927152'
-      position:
-        x: 1402.6424484929998
-        y: 282
-      positionAbsolute:
-        x: 1402.6424484929998
-        y: 282
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        outputs:
-        - value_selector:
-          - '1769264927152'
-          - output
-          value_type: string
-          variable: output
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          cases:
+            - case_id: pre-election-case
+              conditions:
+                - comparison_operator: is
+                  value: PRE_ELECTION
+                  variable_selector:
+                    - "1769337089985"
+                    - period_type
+              id: pre-election-case
+              logical_operator: and
+            - case_id: election-start-case
+              conditions:
+                - comparison_operator: is
+                  value: ELECTION_START_DAY
+                  variable_selector:
+                    - "1769337089985"
+                    - period_type
+              id: election-start-case
+              logical_operator: and
+          selected: false
+          title: 期間判定
+          type: if-else
+        height: 172
+        id: condition-branch-node
+        position:
+          x: 319.22835534028366
+          y: -105.52057767934593
+        positionAbsolute:
+          x: 319.22835534028366
+          y: -105.52057767934593
         selected: false
-        title: 出力
-        type: end
-      height: 87
-      id: '1769265182872'
-      position:
-        x: 1711.464951944548
-        y: 282
-      positionAbsolute:
-        x: 1711.464951944548
-        y: 282
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
-    - data:
-        code: "\nfrom datetime import datetime, timedelta, timezone\n\ndef main():\n\
-          \    # 1. 日本時間 (JST) で現在日時を取得\n    JST = timezone(timedelta(hours=9))\n\
-          \    now = datetime.now(JST)\n    today = now.date()\n    \n    # ==========================================\n\
-          \    # ★ここに「公示日」を設定してください (年, 月, 日)\n    ANNOUNCEMENT_DATE = datetime(2026,\
-          \ 1, 27, tzinfo=JST).date()\n    # ==========================================\n\
-          \n    # 3. 日付比較ロジック\n    diff = (ANNOUNCEMENT_DATE - today).days\n    \n\
-          \    if diff > 0:\n        # 公示日前（事前運動期間）\n        period_type = \"PRE_ELECTION\"\
-          \n        alert_text = f\"【厳重注意】本日は「{today}」です。公示日（{ANNOUNCEMENT_DATE}）の前であるため、「事前運動」の禁止規定が適用されます。投票依頼とみなされる行為は違法です。\"\
-          \n    elif diff == 0:\n        # 公示日当日\n        period_type = \"ELECTION_START_DAY\"\
-          \n        alert_text = f\"本日は「{today}」です。公示日当日です。立候補届出が完了するまでは選挙運動はできません。\"\
-          \n    else:\n        # 選挙期間中（公示日以降）\n        period_type = \"ELECTION_PERIOD\"\
-          \n        alert_text = f\"本日は「{today}」です。選挙期間中です（または終了）。定められた方法での選挙運動が可能です。\"\
-          \n\n    # 4. 結果を返す\n    return {\n        \"today\": str(today),\n     \
-          \   \"announcement_date\": str(ANNOUNCEMENT_DATE),\n        \"status_message\"\
-          : alert_text\n    }\n"
-        code_language: python3
-        outputs:
-          announcement_date:
-            children: null
-            type: string
-          status_message:
-            children: null
-            type: string
-          today:
-            children: null
-            type: string
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: false
+            variable_selector: []
+          desc: 事前運動期間（公示日前）用のチェック
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: pre-election-prompt
+              role: system
+              text: "あなたは選挙コンプライアンスの専門家である弁護士です。
+
+                ユーザーから入力された「発信予定のテキスト」に対し、以下の「参照法令（公職選挙法）」に基づいて適法性を厳格に審査してください。
+
+
+                ## 参照法令
+
+                {{#context#}}
+
+
+                ## 📅 現在の法的ステータス
+
+                【厳重警告】本日は「{{#1769337089985.today#}}」です。
+
+                公示日（{{#1769337089985.announcement_date#}}）の**前**であるため、**「事前運動」の禁止規定が適用されます**。
+
+
+                ⚠️ **この期間中は以下の行為が違法となります：**
+
+                - 「〇〇に投票してください」「一票をお願いします」等の**直接的な投票依頼**
+
+                - 「〇〇候補を応援しよう」等の**当選を得させる目的の呼びかけ**
+
+                - 選挙運動用ポスター・ビラの配布
+
+                - 選挙運動用の電話・戸別訪問
+
+
+                ✅ **この期間中に許容される行為：**
+
+                - 政策・理念の発信（投票依頼を含まないもの）
+
+                - 後援会活動・政治活動としての発信
+
+                - 「〇〇の考え方に共感します」等の個人的意見表明
+
+
+                ## 審査基準（事前運動期間 - 最も厳格）
+
+                1. **事前運動の禁止**: 投票依頼とみなされる表現がないか（最重要）
+
+                2. **当選目的の言動**: 特定候補への投票を促す表現がないか
+
+                3. **虚偽事項の公表**: 事実と異なる経歴や実績の示唆
+
+                4. **利害誘導・買収の示唆**
+
+
+                ## 出力形式
+
+                ### 🏛️ 1. 公職選挙法チェック（事前運動期間）
+
+                - **判定:** 【🔥高リスク/ ⚠️中リスク/ ✅低リスク】
+
+                - **判断根拠:** 判断理由をわかりやすく説明
+
+                - **該当箇所:** 問題のある表現があれば具体的に引用
+
+
+                ## ユーザー入力テキスト
+
+                {{#1769251549581.query#}}"
+          selected: false
+          title: 公職選挙法チェック（事前運動期間）
+          type: llm
+          vision:
+            enabled: false
+        height: 132
+        id: llm-pre-election
+        position:
+          x: 697.5673764122116
+          y: -105.52057767934593
+        positionAbsolute:
+          x: 697.5673764122116
+          y: -105.52057767934593
         selected: false
-        title: 当日日付と公示日の比較
-        type: code
-        variables: []
-      height: 50
-      id: '1769337089985'
-      position:
-        x: 382
-        y: 203.52629136577883
-      positionAbsolute:
-        x: 382
-        y: 203.52629136577883
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 241
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: false
+            variable_selector: []
+          desc: 公示日当日用のチェック
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: election-start-prompt
+              role: system
+              text: "あなたは選挙コンプライアンスの専門家である弁護士です。
+
+                ユーザーから入力された「発信予定のテキスト」に対し、以下の「参照法令（公職選挙法）」に基づいて適法性を厳格に審査してください。
+
+
+                ## 参照法令
+
+                {{#context#}}
+
+
+                ## 📅 現在の法的ステータス
+
+                【注意】本日は「{{#1769337089985.today#}}」、**公示日当日**です。
+
+
+                ⚠️ **公示日当日の注意事項：**
+
+                - 立候補届出が**受理されるまで**は選挙運動はできません
+
+                - 届出受理後は選挙運動が可能になります
+
+                - 届出前に投票依頼を行うと事前運動として違法
+
+
+                ## 審査基準（公示日当日）
+
+                1. **届出状況の確認**: 立候補届出が完了しているか要確認
+
+                2. **事前運動の禁止**: 届出前の投票依頼は違法
+
+                3. **虚偽事項の公表**: 事実と異なる経歴や実績の示唆
+
+                4. **利害誘導・買収の示唆**
+
+                5. **未成年者の選挙運動など、主体に関する制限**
+
+
+                ## 出力形式
+
+                ### 🏛️ 1. 公職選挙法チェック（公示日当日）
+
+                - **判定:** 【🔥高リスク/ ⚠️中リスク/ ✅低リスク】
+
+                - **判断根拠:** 判断理由をわかりやすく説明
+
+                - **注意:** 立候補届出が完了しているか確認してください
+
+
+                ## ユーザー入力テキスト
+
+                {{#1769251549581.query#}}"
+          selected: false
+          title: 公職選挙法チェック（公示日当日）
+          type: llm
+          vision:
+            enabled: false
+        height: 116
+        id: llm-election-start
+        position:
+          x: 697.5673764122116
+          y: 210.78687738827915
+        positionAbsolute:
+          x: 697.5673764122116
+          y: 210.78687738827915
+        selected: false
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          context:
+            enabled: false
+            variable_selector: []
+          desc: 選挙期間中用のチェック
+          model:
+            completion_params:
+              temperature: 0.7
+            mode: chat
+            name: openai/gpt-4o-mini
+            provider: langgenius/openrouter/openrouter
+          prompt_template:
+            - id: election-period-prompt
+              role: system
+              text: "あなたは選挙コンプライアンスの専門家である弁護士です。
+
+                ユーザーから入力された「発信予定のテキスト」に対し、以下の「参照法令（公職選挙法）」に基づいて適法性を審査してください。
+
+
+                ## 参照法令
+
+                {{#context#}}
+
+
+                ## 📅 現在の法的ステータス
+
+                本日は「{{#1769337089985.today#}}」、**選挙期間中**です。
+
+                公示日（{{#1769337089985.announcement_date#}}）以降のため、定められた方法での選挙運動が可能です。
+
+
+                ✅ **選挙期間中に許容される行為：**
+
+                - 投票依頼（「〇〇に投票してください」等）
+
+                - 選挙運動用ウェブサイト・SNSでの発信
+
+                - 選挙運動用電子メール（事前同意者のみ）
+
+
+                ⚠️ **選挙期間中でも禁止される行為：**
+
+                - 虚偽事項の公表
+
+                - 買収・利害誘導
+
+                - 戸別訪問
+
+                - 未成年者による選挙運動
+
+                - 選挙期日当日のSNS更新（投票日は選挙運動禁止）
+
+
+                ## 審査基準（選挙期間中）
+
+                1. **虚偽事項の公表**: 事実と異なる経歴や実績の示唆
+
+                2. **利害誘導・買収の示唆**
+
+                3. **未成年者の選挙運動など、主体に関する制限**
+
+                4. **禁止されている選挙運動方法の使用**
+
+
+                ## 出力形式
+
+                ### 🏛️ 1. 公職選挙法チェック（選挙期間中）
+
+                - **判定:** 【🔥高リスク/ ⚠️中リスク/ ✅低リスク】
+
+                - **判断根拠:** 判断理由をわかりやすく説明
+
+
+                ## ユーザー入力テキスト
+
+                {{#1769251549581.query#}}"
+          selected: false
+          title: 公職選挙法チェック（選挙期間中）
+          type: llm
+          vision:
+            enabled: false
+        height: 116
+        id: llm-election-period
+        position:
+          x: 697.5673764122116
+          y: 51.57572364357826
+        positionAbsolute:
+          x: 697.5673764122116
+          y: 51.57572364357826
+        selected: false
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
+      - data:
+          selected: false
+          template:
+            '{{law_pre|replace("None", "")}}{{law_start|replace("None", "")}}{{law_period|replace("None",
+            "")}}'
+          title: 公選法内容の集約
+          type: template-transform
+          variables:
+            - value_selector:
+                - llm-pre-election
+                - text
+              value_type: string
+              variable: law_pre
+            - value_selector:
+                - llm-election-start
+                - text
+              value_type: string
+              variable: law_start
+            - value_selector:
+                - llm-election-period
+                - text
+              value_type: string
+              variable: law_period
+        height: 52
+        id: "17696512572430"
+        position:
+          x: 981.3418083716867
+          y: 34.24595139597072
+        positionAbsolute:
+          x: 981.3418083716867
+          y: 34.24595139597072
+        selected: false
+        sourcePosition: right
+        targetPosition: left
+        type: custom
+        width: 242
     viewport:
-      x: 103.4250678654536
-      y: 207.74212915660598
-      zoom: 0.6989489191142869
+      x: 356.38934176630073
+      y: 274.94265587042014
+      zoom: 0.7087058824249236
   rag_pipeline_variables: []

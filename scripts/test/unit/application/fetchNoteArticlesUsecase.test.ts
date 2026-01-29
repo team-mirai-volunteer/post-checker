@@ -39,7 +39,6 @@ describe("generateFilename", () => {
     const filename = generateFilename(article);
     expect(filename).toBe(`20240715_n1234567890ab_${"A".repeat(50)}.md`);
   });
-
 });
 
 describe("generateMarkdown", () => {

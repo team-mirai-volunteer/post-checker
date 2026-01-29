@@ -6,7 +6,7 @@ import { fetchArticleDetail, fetchArticleList, type NoteApiArticle } from "../in
 
 // Turndownインスタンス（note.com固有タグを除去）
 const turndown = new TurndownService({
-  headingStyle: "atx",      // # 形式
+  headingStyle: "atx", // # 形式
   codeBlockStyle: "fenced", // ``` 形式
 });
 turndown.addRule("note-custom-tags", {
