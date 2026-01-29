@@ -121,42 +121,6 @@ workflow:
       type: custom
       zIndex: 0
     - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: llm-pre-election-source-1769256163730-target
-      source: llm-pre-election
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: llm-election-start-source-1769256163730-target
-      source: llm-election-start
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        isInLoop: false
-        sourceType: llm
-        targetType: template-transform
-      id: llm-election-period-source-1769256163730-target
-      source: llm-election-period
-      sourceHandle: source
-      target: '1769256163730'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
         isInLoop: false
         sourceType: llm
         targetType: template-transform
@@ -225,39 +189,6 @@ workflow:
       source: '1769264927152'
       sourceHandle: source
       target: '1769265182872'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: llm-pre-election-source-1769264824818-target
-      source: llm-pre-election
-      sourceHandle: source
-      target: '1769264824818'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: llm-election-start-source-1769264824818-target
-      source: llm-election-start
-      sourceHandle: source
-      target: '1769264824818'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInLoop: false
-        sourceType: llm
-        targetType: llm
-      id: llm-election-period-source-1769264824818-target
-      source: llm-election-period
-      sourceHandle: source
-      target: '1769264824818'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -359,6 +290,61 @@ workflow:
       source: condition-branch-node
       sourceHandle: 'false'
       target: llm-election-period
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: llm-pre-election-source-17696512572430-target
+      source: llm-pre-election
+      sourceHandle: source
+      target: '17696512572430'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: llm-election-period-source-17696512572430-target
+      source: llm-election-period
+      sourceHandle: source
+      target: '17696512572430'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: llm-election-start-source-17696512572430-target
+      source: llm-election-start
+      sourceHandle: source
+      target: '17696512572430'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: llm
+      id: 17696512572430-source-1769264824818-target
+      source: '17696512572430'
+      sourceHandle: source
+      target: '1769264824818'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: template-transform
+      id: 17696512572430-source-1769256163730-target
+      source: '17696512572430'
+      sourceHandle: source
+      target: '1769256163730'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -603,10 +589,10 @@ workflow:
       type: custom
       width: 241
     - data:
-        selected: true
+        selected: false
         template: '---
 
-          {{law_pre|replace("None", "")}}{{law_start|replace("None", "")}}{{law_period|replace("None", "")}}
+          {{raw}}
 
 
           ---
@@ -628,21 +614,6 @@ workflow:
         type: template-transform
         variables:
         - value_selector:
-          - llm-pre-election
-          - text
-          value_type: string
-          variable: law_pre
-        - value_selector:
-          - llm-election-start
-          - text
-          value_type: string
-          variable: law_start
-        - value_selector:
-          - llm-election-period
-          - text
-          value_type: string
-          variable: law_period
-        - value_selector:
           - '1769255396970'
           - text
           value_type: string
@@ -661,15 +632,20 @@ workflow:
           - '1769251549581'
           - query
           variable: query
+        - value_selector:
+          - '17696512572430'
+          - output
+          value_type: string
+          variable: raw
       height: 50
       id: '1769256163730'
       position:
-        x: 1027.8060193286685
-        y: 86.79715607636552
+        x: 1261.0914149695398
+        y: 34.24595139597072
       positionAbsolute:
-        x: 1027.8060193286685
-        y: 86.79715607636552
-      selected: true
+        x: 1261.0914149695398
+        y: 34.24595139597072
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -689,9 +665,9 @@ workflow:
           role: system
           text: "あなたは選挙事務所の「選対本部長」です。 \nユーザー（候補者やスタッフ）が作成したSNS投稿案に対して、各専門家（弁護士、政策秘書、リスク担当など）がチェックを行いました。\n\
             提供された「専門家レポート（Context）」を総合的に分析し、ユーザーに対して分かりやすいフィードバックを行ってください。 \nやることは以下のタスクのみとし、修正例の提示は行わないでください。\n\
-            \n## 参照する専門家レポート\n### 公職選挙法チェック\n{{#llm-pre-election.text#}}{{#llm-election-start.text#}}{{#llm-election-period.text#}}\n\
-            ### 政策ビジョンの整合性チェック\n{{#1769255396970.text#}}\n### 公式発言との一致確認\n{{#1769255589411.text#}}\n\
-            ### 炎上リスク判定\n{{#1769255623283.text#}}\n\n## あなたのタスク \n専門家の意見をそのままコピペするのではなく、以下の構成で分かりやすく伝えてください。\
+            \n## 参照する専門家レポート\n### 公職選挙法チェック\n{{#17696512572430.output#}}\n### 政策ビジョンの整合性チェック\n\
+            {{#1769255396970.text#}}\n### 公式発言との一致確認\n{{#1769255589411.text#}}\n###\
+            \ 炎上リスク判定\n{{#1769255623283.text#}}\n\n## あなたのタスク \n専門家の意見をそのままコピペするのではなく、以下の構成で分かりやすく伝えてください。\
             \ \n\n## 出力形式（Markdown）\n### 重要な指摘事項（要約）\n- **総合判定:** 【\U0001F525重大な懸念あり/\
             \ ⚠️注意/ ✅低リスク】\n- 専門家レポートの中で、特に致命的なリスク（公選法違反や炎上リスク）があれば簡潔に指摘。 \n- 些末な指摘は無視して、重要なポイントのみに絞る。\
             \ \n\n"
@@ -703,11 +679,11 @@ workflow:
       height: 86
       id: '1769264824818'
       position:
-        x: 1027.8060193286685
-        y: 392.9968420437926
+        x: 1261.0914149695398
+        y: 354.33811933759114
       positionAbsolute:
-        x: 1027.8060193286685
-        y: 392.9968420437926
+        x: 1261.0914149695398
+        y: 354.33811933759114
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -755,11 +731,11 @@ workflow:
       height: 50
       id: '1769264927152'
       position:
-        x: 1402.6424484929998
-        y: 282
+        x: 1674.5865668400722
+        y: 178.02136651435467
       positionAbsolute:
-        x: 1402.6424484929998
-        y: 282
+        x: 1674.5865668400722
+        y: 178.02136651435467
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -778,11 +754,11 @@ workflow:
       height: 87
       id: '1769265182872'
       position:
-        x: 1711.464951944548
-        y: 282
+        x: 1974.0776544659857
+        y: 238.00903967915002
       positionAbsolute:
-        x: 1711.464951944548
-        y: 282
+        x: 1974.0776544659857
+        y: 238.00903967915002
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -820,10 +796,10 @@ workflow:
       id: '1769337089985'
       position:
         x: 53.154578843688
-        y: 94.00588697261469
+        y: -105.52057767934593
       positionAbsolute:
         x: 53.154578843688
-        y: 94.00588697261469
+        y: -105.52057767934593
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -855,11 +831,11 @@ workflow:
       height: 172
       id: condition-branch-node
       position:
-        x: 310.4334431969719
-        y: 94.00588697261469
+        x: 319.22835534028366
+        y: -105.52057767934593
       positionAbsolute:
-        x: 310.4334431969719
-        y: 94.00588697261469
+        x: 319.22835534028366
+        y: -105.52057767934593
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -1142,8 +1118,44 @@ workflow:
       targetPosition: left
       type: custom
       width: 242
+    - data:
+        selected: true
+        template: '{{law_pre|replace("None", "")}}{{law_start|replace("None", "")}}{{law_period|replace("None", "")}}
+
+          '
+        title: 公選法内容の集約
+        type: template-transform
+        variables:
+        - value_selector:
+          - llm-pre-election
+          - text
+          value_type: string
+          variable: law_pre
+        - value_selector:
+          - llm-election-start
+          - text
+          value_type: string
+          variable: law_start
+        - value_selector:
+          - llm-election-period
+          - text
+          value_type: string
+          variable: law_period
+      height: 52
+      id: '17696512572430'
+      position:
+        x: 981.3418083716867
+        y: 34.24595139597072
+      positionAbsolute:
+        x: 981.3418083716867
+        y: 34.24595139597072
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
     viewport:
-      x: -107.15759783531757
-      y: 231.1764686175925
-      zoom: 0.7501541171029934
+      x: 32.1775868313033
+      y: 256.1962758598662
+      zoom: 0.5499067607795877
   rag_pipeline_variables: []
