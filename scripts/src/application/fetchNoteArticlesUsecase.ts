@@ -71,8 +71,13 @@ export async function fetchNoteArticles(options: {
   return { savedCount, errorCount };
 }
 
+/** ISO 8601 タイムスタンプから日付部分 (YYYY-MM-DD) を抽出する */
+export function extractDateFromISO(isoTimestamp: string): string {
+  return isoTimestamp.split("T")[0];
+}
+
 export function generateFilename(a: NoteApiArticle): string {
-  const date = a.publish_at.split("T")[0].replace(/-/g, "");
+  const date = extractDateFromISO(a.publish_at).replace(/-/g, "");
   const title = a.name
     .replace(/[\\/:*?"<>|]/g, "")
     .replace(/\s+/g, "_")
@@ -81,7 +86,7 @@ export function generateFilename(a: NoteApiArticle): string {
 }
 
 export function generateMeta(a: NoteApiArticle, filename: string): NoteArticleMeta {
-  const publishedAt = a.publish_at.split("T")[0];
+  const publishedAt = extractDateFromISO(a.publish_at);
   return {
     key: a.key,
     title: a.name,
@@ -92,7 +97,7 @@ export function generateMeta(a: NoteApiArticle, filename: string): NoteArticleMe
 }
 
 export function generateMarkdown(a: NoteApiArticle): string {
-  const date = a.publish_at.split("T")[0];
+  const date = extractDateFromISO(a.publish_at);
   const tags = a.hashtags?.length
     ? `- **タグ**: ${a.hashtags.map((h) => h.hashtag.name).join(", ")}\n`
     : "";
