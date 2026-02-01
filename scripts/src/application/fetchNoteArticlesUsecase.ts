@@ -72,8 +72,7 @@ export async function fetchNoteArticles(options: {
 }
 
 export function generateFilename(a: NoteApiArticle): string {
-  const d = new Date(a.publish_at);
-  const date = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  const date = a.publish_at.split("T")[0].replace(/-/g, "");
   const title = a.name
     .replace(/[\\/:*?"<>|]/g, "")
     .replace(/\s+/g, "_")
@@ -82,8 +81,7 @@ export function generateFilename(a: NoteApiArticle): string {
 }
 
 export function generateMeta(a: NoteApiArticle, filename: string): NoteArticleMeta {
-  const d = new Date(a.publish_at);
-  const publishedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const publishedAt = a.publish_at.split("T")[0];
   return {
     key: a.key,
     title: a.name,
@@ -94,8 +92,7 @@ export function generateMeta(a: NoteApiArticle, filename: string): NoteArticleMe
 }
 
 export function generateMarkdown(a: NoteApiArticle): string {
-  const d = new Date(a.publish_at);
-  const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const date = a.publish_at.split("T")[0];
   const tags = a.hashtags?.length
     ? `- **タグ**: ${a.hashtags.map((h) => h.hashtag.name).join(", ")}\n`
     : "";
