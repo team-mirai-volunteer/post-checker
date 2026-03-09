@@ -76,8 +76,13 @@ export function extractDateFromISO(isoTimestamp: string): string {
   return isoTimestamp.split("T")[0];
 }
 
+/** ISO 8601 タイムスタンプからファイル名用の日付部分 (YYYYMMDD) を返す */
+function extractCompactDateFromISO(isoTimestamp: string): string {
+  return extractDateFromISO(isoTimestamp).replace(/-/g, "");
+}
+
 export function generateFilename(a: NoteApiArticle): string {
-  const date = extractDateFromISO(a.publish_at).replace(/-/g, "");
+  const date = extractCompactDateFromISO(a.publish_at);
   const title = a.name
     .replace(/[\\/:*?"<>|]/g, "")
     .replace(/\s+/g, "_")
