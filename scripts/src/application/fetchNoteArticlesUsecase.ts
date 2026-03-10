@@ -88,7 +88,7 @@ function extractCompactDateFromISO(isoTimestamp: string): string {
 export function generateFilename(a: NoteApiArticle): string {
   const date = extractCompactDateFromISO(a.publish_at);
   const title = a.name
-    .replace(/[\/:*?"<>|]/g, "")
+    .replace(/[\\/:*?"<>|]/g, "")
     .replace(/\s+/g, "_")
     .slice(0, 50);
   return `${date}_${a.key}_${title}.md`;
