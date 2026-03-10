@@ -73,7 +73,11 @@ export async function fetchNoteArticles(options: {
 
 /** ISO 8601 タイムスタンプから日付部分 (YYYY-MM-DD) を抽出する */
 export function extractDateFromISO(isoTimestamp: string): string {
-  return isoTimestamp.split("T")[0];
+  const match = /^(\d{4}-\d{2}-\d{2})(?:T|$)/.exec(isoTimestamp);
+  if (!match) {
+    throw new Error(`Invalid publish_at timestamp: ${isoTimestamp}`);
+  }
+  return match[1];
 }
 
 /** ISO 8601 タイムスタンプからファイル名用の日付部分 (YYYYMMDD) を返す */
@@ -84,7 +88,7 @@ function extractCompactDateFromISO(isoTimestamp: string): string {
 export function generateFilename(a: NoteApiArticle): string {
   const date = extractCompactDateFromISO(a.publish_at);
   const title = a.name
-    .replace(/[\\/:*?"<>|]/g, "")
+    .replace(/[\/:*?"<>|]/g, "")
     .replace(/\s+/g, "_")
     .slice(0, 50);
   return `${date}_${a.key}_${title}.md`;
