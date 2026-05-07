@@ -39,6 +39,24 @@ describe("generateFilename", () => {
     const filename = generateFilename(article);
     expect(filename).toBe(`20240715_n1234567890ab_${"A".repeat(50)}.md`);
   });
+
+  test("月・日を2桁でパディング", () => {
+    const article = { ...baseArticle, publish_at: "2024-01-05T00:00:00.000+09:00" };
+    const filename = generateFilename(article);
+    expect(filename).toMatch(/^20240105_/);
+  });
+
+  test("日本語タイトルを処理", () => {
+    const article = { ...baseArticle, name: "日本語のタイトル" };
+    const filename = generateFilename(article);
+    expect(filename).toBe("20240715_n1234567890ab_日本語のタイトル.md");
+  });
+
+  test("UTCの日付文字列でもタイムゾーンに依存しない", () => {
+    const article = { ...baseArticle, publish_at: "2024-12-31T23:00:00.000Z" };
+    const filename = generateFilename(article);
+    expect(filename).toMatch(/^20241231_/);
+  });
 });
 
 describe("generateMarkdown", () => {

@@ -71,9 +71,22 @@ export async function fetchNoteArticles(options: {
   return { savedCount, errorCount };
 }
 
+/** ISO 8601 タイムスタンプから日付部分 (YYYY-MM-DD) を抽出する */
+export function extractDateFromISO(isoTimestamp: string): string {
+  const match = /^(\d{4}-\d{2}-\d{2})(?:T|$)/.exec(isoTimestamp);
+  if (!match) {
+    throw new Error(`Invalid publish_at timestamp: ${isoTimestamp}`);
+  }
+  return match[1];
+}
+
+/** ISO 8601 タイムスタンプからファイル名用の日付部分 (YYYYMMDD) を返す */
+function extractCompactDateFromISO(isoTimestamp: string): string {
+  return extractDateFromISO(isoTimestamp).replace(/-/g, "");
+}
+
 export function generateFilename(a: NoteApiArticle): string {
-  const d = new Date(a.publish_at);
-  const date = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  const date = extractCompactDateFromISO(a.publish_at);
   const title = a.name
     .replace(/[\\/:*?"<>|]/g, "")
     .replace(/\s+/g, "_")
@@ -82,8 +95,7 @@ export function generateFilename(a: NoteApiArticle): string {
 }
 
 export function generateMeta(a: NoteApiArticle, filename: string): NoteArticleMeta {
-  const d = new Date(a.publish_at);
-  const publishedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const publishedAt = extractDateFromISO(a.publish_at);
   return {
     key: a.key,
     title: a.name,
@@ -94,8 +106,7 @@ export function generateMeta(a: NoteApiArticle, filename: string): NoteArticleMe
 }
 
 export function generateMarkdown(a: NoteApiArticle): string {
-  const d = new Date(a.publish_at);
-  const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const date = extractDateFromISO(a.publish_at);
   const tags = a.hashtags?.length
     ? `- **タグ**: ${a.hashtags.map((h) => h.hashtag.name).join(", ")}\n`
     : "";
